@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compare Scenarios · DecisionAI</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="topbar"></div>
+<main class="container">
+  <div class="page-head">
+    <h1>Compare scenarios</h1>
+    <p>Pick saved scenarios to compare them with the original data, side by side.</p>
+  </div>
+
+  <div id="empty" class="card empty" hidden>
+    <h2>No saved scenarios yet</h2>
+    <p>Create one on the What-If page and press “Save scenario”. Use “Save best / expected / worst” to get three versions at once.</p>
+    <a class="btn" href="whatif.html">Open What-If simulator</a>
+  </div>
+
+  <div id="content" class="grid split" hidden>
+    <div class="card">
+      <h2>Saved scenarios</h2>
+      <p class="card-sub">Tick the ones to compare.</p>
+      <div class="check-list" id="list"></div>
+      <div class="btn-row" style="margin-top:12px">
+        <button class="btn secondary small" id="all">Select all</button>
+        <button class="btn secondary small" id="none">Clear</button>
+      </div>
+    </div>
+
+    <div class="stack">
+      <div class="card">
+        <h2>Profit comparison</h2>
+        <div class="chart-box"><canvas id="chart"></canvas></div>
+      </div>
+
+      <div class="card">
+        <h2>Side-by-side table</h2>
+        <div class="table-wrap"><table id="table"></table></div>
+      </div>
+
+      <div class="card">
+        <h2>Inputs and key risks</h2>
+        <div id="risks"></div>
+        <p class="muted small" style="margin:10px 0 0">All figures are estimates based on the stated assumptions, not guaranteed outcomes.</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="js/app.js"></script>
+<script>
+DIS.renderNav("compare.html");
+const $ = (id) => document.getElementById(id);
+let scenarios = [], selected = new Set(), chart = null;
+
+function load() {
+  scenarios = DIS.getScenarios();
+  if (!scenarios.length) { $("empty").hidden = false; $("content").hidden = true; return; }
+  $("empty").hidden = true; $("content").hidden = false;
+  // Keep previous selection; on first load select the latest three.
+  const ids = new Set(scenarios.map((s) => s.id));
+  selected = new Set([...selected].filter((id) => ids.has(id)));
+  if (!selected.size) scenarios.slice(-3).forEach((s) => selected.add(s.id));
+  renderList(); renderCompare();
+}
+
+function renderList() {
+  $("list").innerHTML = scenarios.map((s) =>
+    '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><label><input type="checkbox" data-id="' + s.id + '"' +
+    (selected.has(s.id) ? " checked" : "") + "> " + DIS.esc(s.name) + '</label><button class="btn danger small" data-del="' + s.id + '">Delete</button></div>').join("");
+  $("list").querySelectorAll("input").forEach((c) => c.addEventListener("change", () => {
+    c.checked ? selected.add(c.dataset.id) : selected.delete(c.dataset.id);
+    renderCompare();
+  }));
+  $("list").querySelectorAll("[data-del]").forEach((b) => b.addEventListener("click", () => {
+    DIS.deleteScenario(b.dataset.del); selected.delete(b.dataset.del); load();
+  }));
+}
+
+function renderCompare() {
+  const chosen = scenarios.filter((s) => selected.has(s.id));
+  if (!chosen.length) {
+    $("table").innerHTML = '<tbody><tr><td class="muted">Select at least one scenario.</td></tr></tbody>';
+    $("risks").innerHTML = ""; if (chart) { chart.destroy(); chart = null; } return;
+  }
+  const base = chosen[0].baseline; // all scenarios share the dataset baseline
+  const cols = [{ name: "Original", r: base }].concat(chosen.map((s) => ({ name: s.name, r: s.result })));
+
+  const metrics = [
+    ["Units sold", "units", DIS.num, false], ["Revenue", "revenue", DIS.money, false], ["Cost of goods", "cogs", DIS.money, true],
+    ["Marketing", "marketing", DIS.money, true], ["Other expenses", "expenses", DIS.money, true],
+    ["Profit", "profit", DIS.money, false], ["Profit margin", "margin", (v) => DIS.pct(v), false],
+  ];
+  let html = "<thead><tr><th>Metric</th>" + cols.map((c) => '<th class="num">' + DIS.esc(c.name) + "</th>").join("") + "</tr></thead><tbody>";
+  metrics.forEach(([label, key, f, inv]) => {
+    html += "<tr><td>" + (key === "profit" ? "<strong>" + label + "</strong>" : label) + "</td>" + cols.map((c, i) => {
+      const v = c.r[key];
+      let extra = "";
+      if (i > 0 && key !== "margin") {
+        const d = v - base[key], pc = base[key] ? d / Math.abs(base[key]) : 0;
+        extra = ' <span class="small ' + DIS.deltaClass(inv ? -d : d) + '">(' + DIS.signedPct(pc, 0) + ")</span>";
+      }
+      return '<td class="num">' + f(v) + extra + "</td>";
+    }).join("") + "</tr>";
+  });
+  $("table").innerHTML = html + "</tbody>";
+
+  $("risks").innerHTML = chosen.map((s) => {
+    const p = s.params;
+    return '<div style="margin-bottom:14px"><h3>' + DIS.esc(s.name) + '</h3><p class="muted small" style="margin:0 0 4px">Price ' + DIS.signedPct(p.price, 0) +
+      ", cost " + DIS.signedPct(p.cost, 0) + ", marketing " + DIS.signedPct(p.marketing, 0) + ", expenses " + DIS.signedPct(p.expenses, 0) +
+      " · elasticity " + p.elasticity + ", marketing lift " + p.marketingLift + '</p><ul class="clean small">' +
+      DIS.riskNotes(p, s.result, s.baseline).map((t) => "<li>" + DIS.esc(t) + "</li>").join("") + "</ul></div>";
+  }).join("");
+
+  if (!DIS.chartsAvailable()) return;
+  const labels = cols.map((c) => c.name.length > 26 ? c.name.slice(0, 24) + "…" : c.name);
+  const data = cols.map((c) => Math.round(c.r.profit));
+  const css = getComputedStyle(document.documentElement);
+  const colors = data.map((_, i) => i === 0 ? "#a9b4cf" : css.getPropertyValue("--c1").trim());
+  if (chart) chart.destroy();
+  chart = new Chart($("chart"), {
+    type: "bar",
+    data: { labels, datasets: [{ label: "Profit", data, backgroundColor: colors }] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => "Profit: " + DIS.money(c.parsed.y) } } },
+      scales: { y: { ticks: { callback: (v) => "$" + (Math.abs(v) >= 1000 ? (v / 1000).toFixed(0) + "k" : v) } } },
+    },
+  });
+}
+
+$("all").onclick = () => { scenarios.forEach((s) => selected.add(s.id)); renderList(); renderCompare(); };
+$("none").onclick = () => { selected.clear(); renderList(); renderCompare(); };
+load();
+</script>
+</body>
+</html>
