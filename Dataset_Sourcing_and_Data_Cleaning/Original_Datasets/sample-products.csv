@@ -1,0 +1,161 @@
+product_id,name,category,price,cost,stock,sku,rating
+PRD-0001,Webcam 1080p Lite,Peripherals,248.77,156.73,310,SKU-74914,3.3
+PRD-0002,Cable Organizer Mini,Peripherals,570.24,245.20,13,SKU-19201,5.0
+PRD-0003,USB-C Hub,Accessories,816.08,538.61,299,SKU-15726,3.3
+PRD-0004,Ergonomic Chair V2,Electronics,799.11,543.39,33,SKU-64435,3.1
+PRD-0005,Mechanical Keyboard V2,Storage,701.74,371.92,94,SKU-70797,4.5
+PRD-0006,27-inch Monitor,Furniture,305.75,137.59,376,SKU-89874,4.9
+PRD-0007,Wireless Mouse V2,Peripherals,520.90,333.38,27,SKU-71766,3.7
+PRD-0008,Wireless Mouse,Electronics,268.37,179.81,65,SKU-47436,3.7
+PRD-0009,Ergonomic Chair,Electronics,866.54,554.59,18,SKU-16807,3.0
+PRD-0010,Ergonomic Chair Plus,Storage,575.52,212.94,196,SKU-44468,5.0
+PRD-0011,Cable Organizer Lite,Peripherals,51.16,25.58,474,SKU-55410,4.8
+PRD-0012,Laptop Stand,Peripherals,15.58,10.59,286,SKU-47092,3.8
+PRD-0013,External SSD 1TB Pro,Storage,594.59,368.65,325,SKU-43163,3.9
+PRD-0014,Mechanical Keyboard V2,Accessories,479.85,297.51,416,SKU-66451,3.2
+PRD-0015,External SSD 1TB Plus,Peripherals,605.04,411.43,32,SKU-39499,4.7
+PRD-0016,External SSD 1TB Lite,Storage,415.05,186.77,272,SKU-31139,2.8
+PRD-0017,Webcam 1080p Plus,Furniture,521.84,250.48,458,SKU-71429,3.7
+PRD-0018,Webcam 1080p V2,Furniture,603.73,362.24,307,SKU-71626,4.5
+PRD-0019,Cable Organizer Plus,Storage,295.22,153.51,302,SKU-71316,4.5
+PRD-0020,Laptop Stand,Storage,531.10,212.44,94,SKU-75271,4.5
+PRD-0021,Laptop Stand Plus,Accessories,395.47,213.55,140,SKU-19754,3.2
+PRD-0022,Mechanical Keyboard Lite,Peripherals,763.12,412.08,267,SKU-85855,4.4
+PRD-0023,Desk Lamp V2,Storage,439.78,175.91,105,SKU-59071,4.3
+PRD-0024,27-inch Monitor Mini,Accessories,715.29,357.64,390,SKU-22504,4.9
+PRD-0025,Standing Desk Pro,Accessories,291.44,122.40,361,SKU-18027,4.1
+PRD-0026,Standing Desk Plus,Furniture,37.06,24.83,475,SKU-10530,4.8
+PRD-0027,USB-C Hub Lite,Storage,572.46,251.88,5,SKU-80686,3.6
+PRD-0028,Cable Organizer Pro,Storage,898.78,512.30,121,SKU-12917,4.7
+PRD-0029,Webcam 1080p Plus,Peripherals,799.36,455.64,482,SKU-42039,4.1
+PRD-0030,Desk Lamp Plus,Electronics,587.65,305.58,395,SKU-26358,3.9
+PRD-0031,Webcam 1080p Plus,Accessories,525.70,194.51,199,SKU-23736,3.7
+PRD-0032,USB-C Hub V2,Storage,494.28,242.20,490,SKU-15216,3.9
+PRD-0033,Wireless Mouse Pro,Furniture,423.06,249.61,249,SKU-24964,3.1
+PRD-0034,Webcam 1080p,Storage,541.11,205.62,498,SKU-15464,3.4
+PRD-0035,Cable Organizer Lite,Electronics,618.91,290.89,312,SKU-32916,5.0
+PRD-0036,Webcam 1080p V2,Furniture,719.13,481.82,299,SKU-28531,4.9
+PRD-0037,Standing Desk Lite,Accessories,395.64,241.34,83,SKU-34458,4.9
+PRD-0038,External SSD 1TB V2,Peripherals,283.62,153.15,440,SKU-51389,3.8
+PRD-0039,Webcam 1080p Lite,Storage,821.46,328.58,299,SKU-52107,2.9
+PRD-0040,Laptop Stand Mini,Peripherals,498.37,279.09,92,SKU-69459,4.6
+PRD-0041,Webcam 1080p Lite,Storage,381.96,233.00,59,SKU-40657,3.4
+PRD-0042,Ergonomic Chair Plus,Storage,101.84,67.21,23,SKU-21166,4.5
+PRD-0043,Wireless Mouse Pro,Electronics,484.09,314.66,307,SKU-91220,3.7
+PRD-0044,Noise-Cancelling Headphones Lite,Furniture,606.08,406.07,161,SKU-67180,4.7
+PRD-0045,Mechanical Keyboard V2,Furniture,606.11,363.67,410,SKU-33703,3.1
+PRD-0046,USB-C Hub,Furniture,594.84,220.09,425,SKU-66885,4.7
+PRD-0047,Mechanical Keyboard V2,Peripherals,415.11,249.07,310,SKU-66235,4.5
+PRD-0048,Desk Lamp V2,Furniture,393.90,244.22,96,SKU-90633,3.7
+PRD-0049,Ergonomic Chair V2,Electronics,331.03,172.14,458,SKU-67649,3.4
+PRD-0050,Laptop Stand,Electronics,740.72,444.43,178,SKU-54160,4.2
+PRD-0051,Webcam 1080p V2,Storage,170.09,100.35,484,SKU-84995,4.3
+PRD-0052,Wireless Mouse Pro,Furniture,144.40,79.42,11,SKU-30800,4.6
+PRD-0053,Mechanical Keyboard Lite,Storage,696.39,348.19,208,SKU-89023,3.9
+PRD-0054,Mechanical Keyboard Pro,Furniture,715.59,322.02,312,SKU-34225,3.4
+PRD-0055,Webcam 1080p Pro,Accessories,777.73,303.31,262,SKU-20510,3.1
+PRD-0056,USB-C Hub,Accessories,445.94,254.19,50,SKU-14019,4.2
+PRD-0057,Cable Organizer,Electronics,56.65,30.59,360,SKU-89792,4.6
+PRD-0058,Laptop Stand Pro,Electronics,371.10,200.39,137,SKU-18177,3.8
+PRD-0059,USB-C Hub Mini,Peripherals,579.25,289.63,91,SKU-55046,3.8
+PRD-0060,Cable Organizer Mini,Storage,530.34,344.72,261,SKU-13446,2.9
+PRD-0061,Laptop Stand Plus,Furniture,403.71,222.04,367,SKU-54919,4.2
+PRD-0062,USB-C Hub Pro,Peripherals,430.70,167.97,335,SKU-41186,4.5
+PRD-0063,USB-C Hub V2,Furniture,667.36,393.74,403,SKU-76925,4.8
+PRD-0064,Laptop Stand Plus,Furniture,832.71,566.24,72,SKU-95684,3.5
+PRD-0065,Ergonomic Chair,Furniture,528.24,237.71,113,SKU-38047,4.7
+PRD-0066,USB-C Hub Mini,Electronics,534.83,358.34,26,SKU-95689,4.2
+PRD-0067,Noise-Cancelling Headphones Mini,Peripherals,287.04,189.45,157,SKU-53595,4.0
+PRD-0068,Ergonomic Chair Pro,Accessories,821.47,484.67,321,SKU-83746,4.0
+PRD-0069,27-inch Monitor,Peripherals,434.32,156.36,361,SKU-47978,3.0
+PRD-0070,Cable Organizer Pro,Furniture,675.82,290.60,201,SKU-68856,4.5
+PRD-0071,USB-C Hub Mini,Peripherals,441.76,167.87,24,SKU-38832,4.8
+PRD-0072,Mechanical Keyboard Mini,Accessories,845.89,312.98,70,SKU-53576,3.0
+PRD-0073,External SSD 1TB,Furniture,69.24,35.31,305,SKU-55652,4.5
+PRD-0074,Wireless Mouse Lite,Accessories,660.36,250.94,452,SKU-20052,4.5
+PRD-0075,USB-C Hub Mini,Accessories,872.35,558.30,364,SKU-98699,4.8
+PRD-0076,Standing Desk Pro,Storage,810.77,324.31,191,SKU-25641,2.9
+PRD-0077,Ergonomic Chair Mini,Peripherals,628.37,289.05,4,SKU-77057,3.6
+PRD-0078,Noise-Cancelling Headphones Mini,Electronics,291.32,145.66,402,SKU-89958,3.1
+PRD-0079,External SSD 1TB Mini,Furniture,377.13,139.54,281,SKU-84761,3.0
+PRD-0080,Desk Lamp Plus,Storage,128.60,59.16,296,SKU-48568,3.2
+PRD-0081,Mechanical Keyboard,Storage,428.01,205.44,5,SKU-32972,3.8
+PRD-0082,Standing Desk Pro,Electronics,42.63,19.18,57,SKU-98032,4.6
+PRD-0083,Ergonomic Chair Plus,Furniture,423.58,258.38,207,SKU-55624,3.2
+PRD-0084,Cable Organizer,Storage,419.67,146.88,379,SKU-29491,4.4
+PRD-0085,Desk Lamp Pro,Furniture,262.10,178.23,139,SKU-75929,3.2
+PRD-0086,Ergonomic Chair,Electronics,350.06,178.53,234,SKU-97260,4.1
+PRD-0087,Laptop Stand V2,Peripherals,293.22,164.20,353,SKU-30040,4.6
+PRD-0088,27-inch Monitor Plus,Electronics,740.53,281.40,487,SKU-57268,3.6
+PRD-0089,USB-C Hub Pro,Accessories,611.14,293.35,342,SKU-48659,4.0
+PRD-0090,Mechanical Keyboard Mini,Peripherals,73.63,30.92,150,SKU-60647,2.9
+PRD-0091,Noise-Cancelling Headphones Pro,Storage,486.77,306.67,71,SKU-67791,3.9
+PRD-0092,Cable Organizer Lite,Electronics,389.56,241.53,79,SKU-42258,3.7
+PRD-0093,Ergonomic Chair V2,Electronics,154.55,106.64,11,SKU-13430,3.6
+PRD-0094,Standing Desk Mini,Furniture,545.61,316.45,191,SKU-25554,3.4
+PRD-0095,Desk Lamp Pro,Electronics,848.93,373.53,490,SKU-31513,4.2
+PRD-0096,USB-C Hub Pro,Electronics,651.12,403.69,361,SKU-61993,4.0
+PRD-0097,Laptop Stand Plus,Furniture,428.62,205.74,317,SKU-81973,4.9
+PRD-0098,Mechanical Keyboard,Electronics,222.62,95.73,91,SKU-27312,4.1
+PRD-0099,27-inch Monitor Lite,Electronics,415.16,199.28,61,SKU-17788,2.9
+PRD-0100,Noise-Cancelling Headphones V2,Peripherals,158.99,81.08,112,SKU-23990,3.4
+PRD-0101,Noise-Cancelling Headphones Lite,Peripherals,752.64,383.85,467,SKU-33832,4.6
+PRD-0102,Webcam 1080p V2,Storage,578.21,248.63,481,SKU-64335,4.3
+PRD-0103,Ergonomic Chair Mini,Storage,518.02,279.73,254,SKU-87230,3.1
+PRD-0104,Webcam 1080p Mini,Electronics,571.00,371.15,422,SKU-44880,3.3
+PRD-0105,Webcam 1080p Mini,Accessories,646.14,251.99,219,SKU-54255,3.9
+PRD-0106,Mechanical Keyboard Pro,Storage,322.95,190.54,112,SKU-18905,4.0
+PRD-0107,Webcam 1080p Pro,Storage,492.47,344.73,74,SKU-13884,4.0
+PRD-0108,Cable Organizer,Furniture,243.38,114.39,456,SKU-14823,3.6
+PRD-0109,Wireless Mouse Lite,Electronics,685.18,452.22,354,SKU-38356,3.7
+PRD-0110,External SSD 1TB Pro,Peripherals,570.92,228.37,440,SKU-82632,4.9
+PRD-0111,27-inch Monitor Lite,Furniture,606.19,284.91,499,SKU-37327,3.1
+PRD-0112,Webcam 1080p,Electronics,286.15,125.91,385,SKU-63639,3.6
+PRD-0113,Wireless Mouse V2,Storage,819.96,508.38,133,SKU-77709,3.4
+PRD-0114,External SSD 1TB Lite,Electronics,369.65,144.16,440,SKU-91890,4.1
+PRD-0115,Ergonomic Chair Plus,Electronics,660.23,349.92,478,SKU-58514,4.0
+PRD-0116,External SSD 1TB V2,Storage,838.41,528.20,269,SKU-76610,2.8
+PRD-0117,Noise-Cancelling Headphones V2,Peripherals,483.49,261.08,229,SKU-56914,4.9
+PRD-0118,Ergonomic Chair Mini,Peripherals,15.30,6.27,217,SKU-91770,4.0
+PRD-0119,Ergonomic Chair Pro,Storage,305.54,152.77,424,SKU-46769,4.4
+PRD-0120,USB-C Hub V2,Accessories,187.71,65.70,295,SKU-52835,4.4
+PRD-0121,USB-C Hub V2,Furniture,289.33,164.92,57,SKU-34592,3.1
+PRD-0122,Wireless Mouse Mini,Peripherals,836.02,518.33,443,SKU-80663,3.5
+PRD-0123,Laptop Stand Lite,Peripherals,571.99,297.43,322,SKU-17173,3.1
+PRD-0124,External SSD 1TB V2,Storage,367.32,172.64,229,SKU-23464,3.2
+PRD-0125,Desk Lamp V2,Accessories,434.45,173.78,211,SKU-90597,2.9
+PRD-0126,Mechanical Keyboard Plus,Storage,485.50,223.33,35,SKU-35521,5.0
+PRD-0127,External SSD 1TB Mini,Storage,877.07,587.64,57,SKU-34697,2.8
+PRD-0128,Desk Lamp V2,Accessories,470.05,220.92,12,SKU-38505,3.0
+PRD-0129,Cable Organizer Plus,Electronics,858.19,437.68,222,SKU-15737,3.2
+PRD-0130,Cable Organizer V2,Furniture,60.98,29.88,209,SKU-99672,3.4
+PRD-0131,Wireless Mouse Mini,Furniture,102.11,46.97,459,SKU-89039,3.6
+PRD-0132,Noise-Cancelling Headphones V2,Electronics,149.67,55.38,298,SKU-94382,4.3
+PRD-0133,Cable Organizer,Furniture,10.89,4.25,419,SKU-74018,3.9
+PRD-0134,Noise-Cancelling Headphones Pro,Accessories,839.42,461.68,483,SKU-94813,3.4
+PRD-0135,27-inch Monitor Mini,Furniture,32.54,22.45,69,SKU-64673,4.7
+PRD-0136,External SSD 1TB Pro,Electronics,778.62,443.81,155,SKU-72798,2.9
+PRD-0137,27-inch Monitor Mini,Peripherals,272.15,155.13,365,SKU-26805,2.9
+PRD-0138,27-inch Monitor Plus,Accessories,453.70,163.33,137,SKU-37454,3.0
+PRD-0139,27-inch Monitor V2,Storage,64.89,29.20,134,SKU-41693,4.0
+PRD-0140,Webcam 1080p V2,Furniture,617.96,278.08,302,SKU-90535,4.2
+PRD-0141,Laptop Stand Pro,Storage,896.61,511.07,166,SKU-98517,3.8
+PRD-0142,Cable Organizer Pro,Peripherals,530.38,312.92,193,SKU-47549,4.1
+PRD-0143,Desk Lamp Pro,Electronics,831.49,374.17,395,SKU-33887,4.1
+PRD-0144,Webcam 1080p Lite,Storage,61.64,28.97,443,SKU-39004,4.6
+PRD-0145,Cable Organizer V2,Accessories,90.71,44.45,457,SKU-64476,4.1
+PRD-0146,Noise-Cancelling Headphones,Furniture,488.17,307.55,64,SKU-65549,3.4
+PRD-0147,Laptop Stand Lite,Storage,489.24,229.94,202,SKU-42081,4.8
+PRD-0148,External SSD 1TB V2,Furniture,450.31,157.61,448,SKU-74049,4.9
+PRD-0149,Mechanical Keyboard V2,Accessories,625.99,306.74,244,SKU-21054,3.3
+PRD-0150,Desk Lamp Pro,Electronics,560.93,224.37,288,SKU-51020,3.9
+PRD-0151,27-inch Monitor V2,Furniture,240.19,151.32,266,SKU-70196,4.5
+PRD-0152,Wireless Mouse Plus,Furniture,383.99,149.76,196,SKU-20900,4.5
+PRD-0153,Mechanical Keyboard V2,Electronics,617.26,234.56,476,SKU-93498,4.1
+PRD-0154,Noise-Cancelling Headphones Pro,Accessories,582.78,238.94,419,SKU-38600,3.2
+PRD-0155,Standing Desk Mini,Furniture,617.29,419.76,20,SKU-25548,3.3
+PRD-0156,Desk Lamp V2,Furniture,549.71,219.88,444,SKU-65610,4.9
+PRD-0157,USB-C Hub Lite,Peripherals,420.01,281.41,220,SKU-23622,3.7
+PRD-0158,Mechanical Keyboard V2,Electronics,373.33,205.33,242,SKU-91824,3.1
+PRD-0159,Wireless Mouse Lite,Accessories,781.27,468.76,296,SKU-77135,4.1
+PRD-0160,Noise-Cancelling Headphones V2,Storage,391.31,156.52,188,SKU-87150,3.1
