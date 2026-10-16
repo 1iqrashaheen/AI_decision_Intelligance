@@ -1,0 +1,221 @@
+expense_id,date,category,vendor,amount,payment_method,employee,status
+EXP-0001,2026-04-26,Marketing,Uber,1150.62,Reimbursement,Mia Nguyen,Rejected
+EXP-0002,2026-05-30,Training,Notion,141.84,Invoice,Yuki Haddad,Approved
+EXP-0003,2026-03-09,Training,Zoom,1137.77,Reimbursement,Sam Okafor,Approved
+EXP-0004,2026-04-17,Hardware,Uber,2229.23,Corporate Card,Sofia Haddad,Approved
+EXP-0005,2026-02-18,Travel,Coursera,1279.95,Corporate Card,Omar Cohen,Pending
+EXP-0006,2026-04-12,Training,Staples,1915.93,Invoice,Mia Wei,Approved
+EXP-0007,2026-03-20,Hardware,Marriott,849.01,Corporate Card,Priya Herrera,Rejected
+EXP-0008,2026-04-17,Training,Notion,2314.72,Corporate Card,Luca Rossi,Approved
+EXP-0009,2026-02-16,Travel,Marriott,781.51,Invoice,Elena Murphy,Approved
+EXP-0010,2026-02-10,Hardware,Zoom,474.16,Corporate Card,Omar Murphy,Pending
+EXP-0011,2026-05-19,Travel,Notion,1595.68,Invoice,Sofia Nguyen,Rejected
+EXP-0012,2026-01-09,Marketing,Coursera,1979.71,Corporate Card,Elena Tanaka,Rejected
+EXP-0013,2026-02-03,Training,Marriott,1931.12,Corporate Card,Nina Wei,Approved
+EXP-0014,2026-05-15,Hardware,Delta,2197.87,Corporate Card,Paul Kowalski,Approved
+EXP-0015,2026-03-25,Training,Coursera,1984.57,Corporate Card,Mia Murphy,Approved
+EXP-0016,2026-05-16,Software,Staples,1872.05,ACH,Marco Wei,Approved
+EXP-0017,2026-03-31,Meals,Notion,2290.26,Reimbursement,David Rossi,Rejected
+EXP-0018,2026-04-13,Marketing,Apple,999.21,Corporate Card,Yuki Okafor,Approved
+EXP-0019,2026-05-30,Training,Marriott,1581.81,Invoice,Chen Diaz,Rejected
+EXP-0020,2026-05-08,Training,Marriott,1128.02,Invoice,Paul Wei,Pending
+EXP-0021,2026-03-30,Training,Zoom,2227.72,Reimbursement,Laura Diaz,Approved
+EXP-0022,2026-04-11,Training,AWS,90.17,Reimbursement,Marco Murphy,Pending
+EXP-0023,2026-03-22,Meals,Notion,1618.31,Corporate Card,Chen Nguyen,Pending
+EXP-0024,2026-04-17,Hardware,Notion,1431.64,ACH,Yuki Shah,Approved
+EXP-0025,2026-04-30,Meals,Notion,657.69,Reimbursement,Tomás Tanaka,Rejected
+EXP-0026,2026-05-11,Office Supplies,Coursera,715.24,Reimbursement,Sam Murphy,Rejected
+EXP-0027,2026-05-31,Training,AWS,957.88,Corporate Card,Elena Okafor,Approved
+EXP-0028,2026-03-23,Hardware,Coursera,929.00,Reimbursement,James Shah,Pending
+EXP-0029,2026-05-24,Office Supplies,Zoom,880.95,Invoice,Marco Kowalski,Approved
+EXP-0030,2026-01-29,Travel,Coursera,771.73,Invoice,Chen Nguyen,Approved
+EXP-0031,2026-04-15,Office Supplies,Zoom,1936.53,ACH,David Khan,Rejected
+EXP-0032,2026-03-09,Marketing,Notion,1672.25,Corporate Card,Paul Okafor,Approved
+EXP-0033,2026-03-07,Software,Notion,2079.51,Corporate Card,Anna Wei,Approved
+EXP-0034,2026-03-06,Office Supplies,Staples,1172.71,Reimbursement,Marco Bianchi,Pending
+EXP-0035,2026-02-04,Meals,Staples,946.35,Reimbursement,David Rossi,Approved
+EXP-0036,2026-03-09,Hardware,Delta,401.79,Corporate Card,Paul Diaz,Rejected
+EXP-0037,2026-02-07,Hardware,Zoom,179.40,Corporate Card,Priya Larsen,Pending
+EXP-0038,2026-01-01,Marketing,Delta,1259.68,ACH,Paul Cohen,Pending
+EXP-0039,2026-03-27,Software,AWS,708.50,Corporate Card,Sofia Tanaka,Approved
+EXP-0040,2026-01-08,Travel,Staples,1885.95,Reimbursement,Luca Khan,Approved
+EXP-0041,2026-01-19,Travel,Uber,829.18,Reimbursement,James Shah,Rejected
+EXP-0042,2026-05-10,Office Supplies,Notion,352.50,Corporate Card,Sofia Khan,Rejected
+EXP-0043,2026-01-12,Training,Zoom,1841.82,Reimbursement,Laura Khan,Approved
+EXP-0044,2026-03-26,Hardware,Uber,66.97,Corporate Card,Sam Petrov,Pending
+EXP-0045,2026-02-05,Travel,AWS,1816.36,Corporate Card,David Wei,Rejected
+EXP-0046,2026-01-28,Office Supplies,Staples,304.25,Corporate Card,Paul Haddad,Approved
+EXP-0047,2026-03-04,Meals,Notion,1090.89,Corporate Card,Omar Meyer,Pending
+EXP-0048,2026-03-06,Software,AWS,707.95,ACH,Tomás Nguyen,Approved
+EXP-0049,2026-01-07,Marketing,Coursera,1949.42,ACH,Paul Nguyen,Pending
+EXP-0050,2026-02-04,Marketing,Notion,1219.26,Reimbursement,Marco Bennett,Approved
+EXP-0051,2026-05-13,Software,Marriott,445.16,Invoice,Fatima Wei,Rejected
+EXP-0052,2026-04-23,Office Supplies,Zoom,929.56,Corporate Card,Anna Diaz,Rejected
+EXP-0053,2026-04-22,Travel,Notion,252.03,Reimbursement,Anna Wei,Rejected
+EXP-0054,2026-03-05,Marketing,Notion,905.91,ACH,Paul Larsen,Approved
+EXP-0055,2026-01-05,Training,Zoom,2187.09,Reimbursement,Aisha Meyer,Approved
+EXP-0056,2026-02-28,Hardware,Zoom,1505.23,Reimbursement,Tomás Rossi,Pending
+EXP-0057,2026-04-07,Office Supplies,Uber,2293.04,ACH,Paul Rossi,Approved
+EXP-0058,2026-03-07,Travel,AWS,1604.19,Corporate Card,Chen Rossi,Pending
+EXP-0059,2026-04-03,Travel,Delta,619.89,Invoice,Elena Larsen,Approved
+EXP-0060,2026-01-15,Hardware,Delta,1869.20,Invoice,Elena Larsen,Pending
+EXP-0061,2026-01-19,Marketing,Apple,1167.57,Reimbursement,Marco Kowalski,Rejected
+EXP-0062,2026-01-02,Training,Coursera,217.72,Corporate Card,Elena Haddad,Approved
+EXP-0063,2026-01-28,Meals,Apple,239.15,Corporate Card,Marco Wei,Rejected
+EXP-0064,2026-05-24,Marketing,Delta,383.21,Corporate Card,Nina Shah,Approved
+EXP-0065,2026-05-07,Meals,Zoom,1904.64,ACH,Elena Shah,Rejected
+EXP-0066,2026-02-24,Office Supplies,Notion,1590.08,Reimbursement,David Diaz,Rejected
+EXP-0067,2026-05-26,Office Supplies,Notion,1756.34,Reimbursement,Yuki Al-Sayed,Rejected
+EXP-0068,2026-01-19,Hardware,Uber,1707.54,ACH,Aisha Bianchi,Rejected
+EXP-0069,2026-01-25,Marketing,Delta,2050.44,Reimbursement,Omar Murphy,Pending
+EXP-0070,2026-05-09,Travel,AWS,866.14,Reimbursement,Chen Cohen,Approved
+EXP-0071,2026-04-07,Hardware,Notion,1201.60,ACH,Elena Shah,Rejected
+EXP-0072,2026-05-31,Training,Coursera,1531.21,Corporate Card,Sam Shah,Approved
+EXP-0073,2026-02-13,Software,Zoom,1400.43,Corporate Card,Laura Larsen,Approved
+EXP-0074,2026-02-20,Meals,Apple,1712.85,Corporate Card,Nina Shah,Pending
+EXP-0075,2026-04-13,Hardware,Coursera,1554.77,Reimbursement,Yuki Haddad,Approved
+EXP-0076,2026-02-18,Hardware,Uber,2304.20,ACH,Laura Bianchi,Approved
+EXP-0077,2026-02-16,Travel,Coursera,2214.53,Corporate Card,Omar Meyer,Approved
+EXP-0078,2026-03-18,Travel,Delta,419.66,Reimbursement,Mia Silva,Approved
+EXP-0079,2026-01-06,Software,Apple,2371.13,Corporate Card,Nina Murphy,Approved
+EXP-0080,2026-01-12,Hardware,Marriott,2364.44,Corporate Card,Omar Diaz,Approved
+EXP-0081,2026-03-31,Hardware,Zoom,193.18,Corporate Card,Omar Silva,Approved
+EXP-0082,2026-03-05,Marketing,Staples,2373.57,ACH,Sofia Bennett,Pending
+EXP-0083,2026-03-31,Meals,Apple,2232.81,Corporate Card,Paul Wei,Approved
+EXP-0084,2026-05-19,Training,Uber,374.46,ACH,Aisha Shah,Pending
+EXP-0085,2026-05-10,Office Supplies,AWS,1647.56,Corporate Card,Paul Shah,Rejected
+EXP-0086,2026-02-13,Marketing,Staples,436.01,Corporate Card,Fatima Bianchi,Pending
+EXP-0087,2026-05-17,Training,Staples,967.27,Corporate Card,James Shah,Approved
+EXP-0088,2026-04-11,Training,AWS,2039.81,Invoice,Luca Petrov,Approved
+EXP-0089,2026-05-13,Marketing,Delta,472.83,ACH,Tomás Rossi,Pending
+EXP-0090,2026-01-25,Office Supplies,Staples,751.88,Invoice,Noah Diaz,Rejected
+EXP-0091,2026-03-16,Travel,Notion,1839.77,Corporate Card,Laura Silva,Pending
+EXP-0092,2026-05-24,Hardware,Staples,1704.09,Invoice,Laura Silva,Approved
+EXP-0093,2026-01-29,Training,Zoom,704.44,Corporate Card,Elena Silva,Rejected
+EXP-0094,2026-01-18,Hardware,Delta,1261.58,Corporate Card,James Bennett,Approved
+EXP-0095,2026-02-22,Hardware,Coursera,342.06,ACH,Sofia Meyer,Pending
+EXP-0096,2026-02-11,Travel,Coursera,820.05,ACH,Elena Haddad,Approved
+EXP-0097,2026-04-27,Meals,Staples,752.21,Corporate Card,Chen Bianchi,Approved
+EXP-0098,2026-01-10,Training,Uber,264.42,Invoice,James Cohen,Rejected
+EXP-0099,2026-01-18,Office Supplies,Uber,767.70,Reimbursement,Anna Khan,Pending
+EXP-0100,2026-05-30,Travel,Apple,2360.01,ACH,Elena Rossi,Approved
+EXP-0101,2026-02-23,Travel,Notion,519.49,Reimbursement,Tomás Shah,Rejected
+EXP-0102,2026-04-21,Travel,Notion,312.48,Invoice,Tomás Petrov,Approved
+EXP-0103,2026-02-25,Training,AWS,1484.55,Invoice,Chen Meyer,Approved
+EXP-0104,2026-05-17,Office Supplies,Uber,1186.94,ACH,Laura Tanaka,Approved
+EXP-0105,2026-02-05,Marketing,Marriott,395.26,Corporate Card,Sofia Wei,Approved
+EXP-0106,2026-02-13,Training,Staples,2191.52,Corporate Card,Tomás Meyer,Rejected
+EXP-0107,2026-05-30,Meals,Notion,286.18,Reimbursement,Marco Rossi,Approved
+EXP-0108,2026-03-12,Training,Delta,1552.85,Invoice,Paul Okafor,Rejected
+EXP-0109,2026-04-23,Meals,Notion,1460.09,Invoice,Aisha Al-Sayed,Approved
+EXP-0110,2026-02-04,Marketing,Notion,1107.76,Reimbursement,Luca Kowalski,Pending
+EXP-0111,2026-04-10,Travel,Marriott,1496.75,Corporate Card,Anna Wei,Approved
+EXP-0112,2026-03-09,Marketing,Coursera,2179.89,Invoice,Marco Petrov,Approved
+EXP-0113,2026-03-21,Marketing,Marriott,797.55,Corporate Card,Sofia Diaz,Pending
+EXP-0114,2026-04-05,Training,Delta,380.73,Reimbursement,David Rossi,Pending
+EXP-0115,2026-04-04,Hardware,Apple,1357.37,Reimbursement,Priya Wei,Approved
+EXP-0116,2026-02-28,Training,Marriott,1184.59,Corporate Card,Yuki Tanaka,Rejected
+EXP-0117,2026-05-08,Hardware,Apple,2049.43,Reimbursement,Sofia Larsen,Approved
+EXP-0118,2026-05-14,Training,Staples,2158.87,Corporate Card,Mia Bennett,Approved
+EXP-0119,2026-05-03,Training,Uber,549.75,Invoice,Chen Tanaka,Rejected
+EXP-0120,2026-03-05,Travel,Marriott,1296.73,Invoice,Anna Murphy,Approved
+EXP-0121,2026-02-18,Hardware,Uber,2242.79,ACH,Priya Rossi,Rejected
+EXP-0122,2026-05-25,Software,Apple,214.48,Invoice,Mia Diaz,Approved
+EXP-0123,2026-04-09,Marketing,Delta,821.23,Invoice,Chen Meyer,Approved
+EXP-0124,2026-03-30,Office Supplies,Coursera,161.75,Invoice,James Tanaka,Rejected
+EXP-0125,2026-03-15,Travel,Delta,1635.78,Reimbursement,Sam Khan,Approved
+EXP-0126,2026-05-05,Marketing,Coursera,1786.17,ACH,Tomás Bianchi,Pending
+EXP-0127,2026-01-04,Meals,Uber,1387.89,Invoice,Fatima Wei,Approved
+EXP-0128,2026-03-19,Office Supplies,Marriott,671.58,ACH,Omar Okafor,Approved
+EXP-0129,2026-04-22,Training,Delta,717.33,ACH,David Khan,Approved
+EXP-0130,2026-01-05,Meals,Coursera,1331.68,Reimbursement,Tomás Bianchi,Pending
+EXP-0131,2026-05-13,Office Supplies,Zoom,1576.75,Corporate Card,Yuki Al-Sayed,Rejected
+EXP-0132,2026-05-25,Marketing,Marriott,1092.15,ACH,Paul Bianchi,Rejected
+EXP-0133,2026-03-13,Hardware,Delta,430.29,Reimbursement,Aisha Wei,Pending
+EXP-0134,2026-04-25,Office Supplies,Uber,2273.72,Reimbursement,Sam Khan,Pending
+EXP-0135,2026-04-26,Software,Staples,1780.94,Corporate Card,David Murphy,Approved
+EXP-0136,2026-03-04,Meals,Staples,235.82,Reimbursement,Marco Haddad,Approved
+EXP-0137,2026-01-14,Travel,Marriott,1378.04,Reimbursement,Laura Al-Sayed,Approved
+EXP-0138,2026-05-03,Marketing,Apple,1891.38,Invoice,Sofia Bianchi,Pending
+EXP-0139,2026-02-05,Hardware,Zoom,1563.25,Invoice,David Larsen,Pending
+EXP-0140,2026-01-31,Meals,Delta,2095.32,Invoice,Omar Petrov,Rejected
+EXP-0141,2026-02-26,Office Supplies,Uber,339.92,Corporate Card,Noah Cohen,Pending
+EXP-0142,2026-03-14,Software,Marriott,2274.27,Corporate Card,James Khan,Pending
+EXP-0143,2026-01-21,Office Supplies,Apple,2339.85,Invoice,Laura Khan,Rejected
+EXP-0144,2026-04-16,Hardware,Coursera,603.00,Reimbursement,Elena Diaz,Approved
+EXP-0145,2026-03-16,Meals,Staples,574.53,Reimbursement,Paul Okafor,Pending
+EXP-0146,2026-03-29,Travel,Staples,1861.51,ACH,David Herrera,Approved
+EXP-0147,2026-03-02,Software,Apple,1551.38,Invoice,Yuki Petrov,Approved
+EXP-0148,2026-03-27,Marketing,Notion,999.82,Reimbursement,Laura Meyer,Rejected
+EXP-0149,2026-05-25,Meals,Marriott,170.16,Corporate Card,Omar Diaz,Rejected
+EXP-0150,2026-05-16,Office Supplies,Marriott,804.60,Invoice,Yuki Herrera,Approved
+EXP-0151,2026-01-31,Travel,Notion,1424.82,Corporate Card,Elena Herrera,Rejected
+EXP-0152,2026-01-20,Office Supplies,Coursera,408.84,Invoice,Yuki Meyer,Approved
+EXP-0153,2026-03-14,Software,Coursera,2247.08,Reimbursement,Paul Rossi,Pending
+EXP-0154,2026-05-11,Training,Zoom,612.08,Invoice,Elena Petrov,Approved
+EXP-0155,2026-03-19,Marketing,Notion,2379.99,Reimbursement,Sofia Diaz,Approved
+EXP-0156,2026-05-17,Meals,Uber,1919.55,Corporate Card,James Okafor,Pending
+EXP-0157,2026-04-07,Meals,Zoom,1371.85,Invoice,Yuki Khan,Approved
+EXP-0158,2026-05-17,Travel,Apple,438.96,Reimbursement,James Cohen,Approved
+EXP-0159,2026-03-25,Travel,Marriott,1573.33,ACH,Paul Khan,Rejected
+EXP-0160,2026-04-04,Training,Zoom,2055.35,Corporate Card,Omar Murphy,Pending
+EXP-0161,2026-04-08,Training,Staples,1121.12,ACH,Yuki Silva,Pending
+EXP-0162,2026-04-14,Software,Coursera,2255.81,Corporate Card,Yuki Shah,Approved
+EXP-0163,2026-05-10,Office Supplies,Notion,2336.60,Invoice,Nina Herrera,Pending
+EXP-0164,2026-04-24,Travel,Notion,2239.60,Invoice,Noah Wei,Pending
+EXP-0165,2026-03-19,Training,Staples,1100.88,ACH,Mia Rossi,Rejected
+EXP-0166,2026-05-10,Meals,Coursera,2096.11,Reimbursement,Elena Herrera,Approved
+EXP-0167,2026-03-26,Software,Notion,166.52,Corporate Card,Aisha Al-Sayed,Pending
+EXP-0168,2026-05-09,Travel,Notion,1843.94,Invoice,Sam Haddad,Pending
+EXP-0169,2026-02-27,Travel,Uber,1964.91,Reimbursement,James Herrera,Approved
+EXP-0170,2026-04-13,Software,Delta,1467.60,ACH,Paul Wei,Approved
+EXP-0171,2026-02-13,Marketing,Coursera,1925.58,ACH,Aisha Shah,Approved
+EXP-0172,2026-03-30,Software,Marriott,1652.98,Reimbursement,David Shah,Pending
+EXP-0173,2026-03-29,Travel,Delta,1810.52,Invoice,Chen Nguyen,Approved
+EXP-0174,2026-05-31,Travel,Marriott,855.75,Invoice,Nina Tanaka,Rejected
+EXP-0175,2026-04-12,Training,Uber,2129.60,Reimbursement,Fatima Murphy,Approved
+EXP-0176,2026-03-31,Marketing,Delta,820.10,Reimbursement,Luca Kowalski,Approved
+EXP-0177,2026-05-13,Travel,Coursera,2242.42,Corporate Card,Noah Al-Sayed,Approved
+EXP-0178,2026-04-06,Training,Staples,2213.34,Reimbursement,Elena Nguyen,Rejected
+EXP-0179,2026-05-14,Training,Delta,1153.63,ACH,Omar Diaz,Pending
+EXP-0180,2026-02-04,Software,Uber,604.06,ACH,Elena Tanaka,Approved
+EXP-0181,2026-01-27,Marketing,Zoom,1800.56,ACH,Nina Larsen,Approved
+EXP-0182,2026-03-20,Office Supplies,Marriott,1794.45,ACH,Elena Kowalski,Rejected
+EXP-0183,2026-03-28,Marketing,AWS,472.46,ACH,Nina Petrov,Approved
+EXP-0184,2026-02-17,Travel,Uber,1448.84,Reimbursement,Priya Wei,Pending
+EXP-0185,2026-02-02,Marketing,Staples,1028.38,ACH,Anna Bianchi,Approved
+EXP-0186,2026-01-12,Hardware,Uber,1235.12,Reimbursement,Fatima Larsen,Approved
+EXP-0187,2026-04-14,Meals,Zoom,138.74,ACH,Anna Haddad,Approved
+EXP-0188,2026-03-21,Office Supplies,AWS,1321.04,Invoice,David Nguyen,Pending
+EXP-0189,2026-04-10,Training,Notion,22.23,Corporate Card,Omar Bianchi,Pending
+EXP-0190,2026-02-06,Marketing,AWS,2339.65,Reimbursement,Marco Al-Sayed,Pending
+EXP-0191,2026-04-08,Office Supplies,Marriott,1551.36,Reimbursement,Priya Nguyen,Approved
+EXP-0192,2026-01-04,Meals,AWS,1737.78,Corporate Card,Priya Silva,Rejected
+EXP-0193,2026-05-16,Software,Notion,411.68,ACH,James Petrov,Approved
+EXP-0194,2026-01-05,Office Supplies,Notion,360.23,Reimbursement,Chen Khan,Approved
+EXP-0195,2026-05-19,Meals,Apple,1615.76,Invoice,Fatima Cohen,Approved
+EXP-0196,2026-04-20,Meals,Coursera,245.05,Corporate Card,Mia Shah,Pending
+EXP-0197,2026-04-06,Hardware,Apple,1913.32,ACH,James Bennett,Approved
+EXP-0198,2026-01-08,Hardware,Marriott,1304.12,Invoice,Fatima Bianchi,Rejected
+EXP-0199,2026-03-23,Meals,Notion,765.39,Corporate Card,Noah Petrov,Approved
+EXP-0200,2026-02-14,Office Supplies,Uber,1760.90,Reimbursement,Tomás Khan,Approved
+EXP-0201,2026-04-08,Hardware,Zoom,898.73,ACH,Priya Murphy,Approved
+EXP-0202,2026-04-11,Training,AWS,1579.87,Invoice,Marco Silva,Pending
+EXP-0203,2026-03-16,Software,Uber,1652.05,Invoice,Anna Haddad,Rejected
+EXP-0204,2026-01-29,Training,Delta,1534.95,Corporate Card,Nina Nguyen,Pending
+EXP-0205,2026-05-31,Hardware,AWS,2007.54,Invoice,Laura Herrera,Rejected
+EXP-0206,2026-05-24,Travel,Apple,1078.20,Reimbursement,Anna Al-Sayed,Approved
+EXP-0207,2026-02-27,Software,Staples,1729.34,ACH,Elena Bianchi,Approved
+EXP-0208,2026-02-08,Software,Notion,1942.00,Invoice,David Haddad,Pending
+EXP-0209,2026-01-08,Office Supplies,AWS,1663.83,ACH,Chen Silva,Pending
+EXP-0210,2026-01-02,Meals,Coursera,161.69,Reimbursement,Nina Okafor,Approved
+EXP-0211,2026-02-27,Office Supplies,Coursera,224.74,Invoice,Sofia Diaz,Pending
+EXP-0212,2026-01-09,Software,Coursera,63.53,Corporate Card,Elena Haddad,Approved
+EXP-0213,2026-03-22,Training,AWS,2246.80,Reimbursement,Anna Khan,Rejected
+EXP-0214,2026-05-17,Marketing,AWS,513.74,Reimbursement,James Haddad,Pending
+EXP-0215,2026-01-22,Hardware,Marriott,146.96,ACH,Sam Petrov,Rejected
+EXP-0216,2026-05-08,Marketing,Coursera,1246.01,Reimbursement,Tomás Tanaka,Approved
+EXP-0217,2026-04-01,Hardware,Staples,150.46,Reimbursement,Luca Bennett,Rejected
+EXP-0218,2026-05-13,Hardware,Zoom,74.85,Reimbursement,Nina Shah,Approved
+EXP-0219,2026-02-28,Training,Marriott,2031.53,ACH,Noah Kowalski,Approved
+EXP-0220,2026-01-26,Marketing,AWS,2282.38,ACH,Laura Diaz,Pending
