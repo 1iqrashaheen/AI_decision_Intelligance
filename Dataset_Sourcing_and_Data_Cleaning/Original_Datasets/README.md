@@ -6,7 +6,7 @@ This directory contains the original datasets collected for the **AI Decision In
 
 option1: 
 It contains more records.
-https://archive.ics.uci.edu/dataset/502/online+retail+ii?utm_source=chatgpt.com
+https://archive.ics.uci.edu/dataset/502/online+retail+ii
 
 
 
