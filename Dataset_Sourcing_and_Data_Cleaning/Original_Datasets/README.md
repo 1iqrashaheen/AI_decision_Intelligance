@@ -4,6 +4,13 @@ This directory contains the original datasets collected for the **AI Decision In
 
 ## 1. Sales Dataset
 
+option1: 
+It contains more records.
+https://archive.ics.uci.edu/dataset/502/online+retail+ii?utm_source=chatgpt.com
+
+
+
+option2:
 - **Dataset Name:** Online Retail
 - **Source:** [UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/352/online+retail)
 - **Purpose:** Analyze sales transactions, product quantities, prices, and customer purchasing patterns.
