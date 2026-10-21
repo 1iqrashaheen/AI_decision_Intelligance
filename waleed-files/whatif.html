@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What-If · DecisionAI</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="topbar"></div>
+<main class="container">
+  <div class="page-head">
+    <h1>What-if simulator</h1>
+    <p>Change business variables and see the estimated effect on revenue, costs and profit.</p>
+  </div>
+
+  <div id="empty" class="card empty" hidden>
+    <h2>No data loaded yet</h2>
+    <p>The simulator needs a dataset to work from.</p>
+    <div class="btn-row" style="justify-content:center">
+      <a class="btn" href="upload.html">Upload data</a>
+      <button class="btn secondary" id="loadSample">Load sample data</button>
+    </div>
+  </div>
+
+  <div id="content" class="grid split" hidden>
+    <!-- Inputs -->
+    <div class="stack">
+      <form class="card" id="form" onsubmit="return false">
+        <h2>Change variables</h2>
+        <div class="field"><label for="price">Product prices</label>
+          <div class="range-row"><input type="range" id="price" min="-30" max="30" step="1" value="0"><span class="range-val" id="priceVal"></span></div></div>
+        <div class="field"><label for="cost">Unit costs</label>
+          <div class="range-row"><input type="range" id="cost" min="-30" max="30" step="1" value="0"><span class="range-val" id="costVal"></span></div></div>
+        <div class="field"><label for="marketing">Marketing budget</label>
+          <div class="range-row"><input type="range" id="marketing" min="-50" max="100" step="5" value="0"><span class="range-val" id="marketingVal"></span></div></div>
+        <div class="field"><label for="expenses">Other expenses</label>
+          <div class="range-row"><input type="range" id="expenses" min="-30" max="50" step="1" value="0"><span class="range-val" id="expensesVal"></span></div></div>
+
+        <h3 style="margin-top:20px">Assumptions</h3>
+        <div class="field"><label for="elasticity">Price elasticity of demand <span class="hint">(−1.2 means a 10% price rise cuts units by about 12%)</span></label>
+          <input type="number" id="elasticity" step="0.1" min="-5" max="0" value="-1.2"></div>
+        <div class="field"><label for="lift">Marketing sales lift <span class="hint">(0.15 means +100% marketing gives +15% units)</span></label>
+          <input type="number" id="lift" step="0.05" min="0" max="2" value="0.15"></div>
+
+        <div class="btn-row"><button type="button" class="btn secondary" id="reset">Reset</button></div>
+      </form>
+
+      <div class="card">
+        <h2>Save this scenario</h2>
+        <div class="field"><label for="name">Scenario name</label><input type="text" id="name" placeholder="e.g. 10% price increase"></div>
+        <div class="btn-row">
+          <button class="btn" id="save">Save scenario</button>
+          <button class="btn secondary" id="saveCases" title="Saves best, expected and worst versions of the current inputs">Save best / expected / worst</button>
+        </div>
+        <div id="saved" style="margin-top:12px" hidden></div>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="stack">
+      <div class="grid cols-3" id="cards"></div>
+
+      <div class="card">
+        <h2>Original vs scenario</h2>
+        <div class="chart-box"><canvas id="barChart"></canvas></div>
+      </div>
+
+      <div class="card">
+        <h2>Breakdown</h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Metric</th><th class="num">Original</th><th class="num">Scenario</th><th class="num">Change</th><th class="num">%</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table></div>
+      </div>
+
+      <div class="grid cols-2">
+        <div class="card"><h2>Risks to watch</h2><ul class="clean" id="risks"></ul>
+          <p class="muted small" style="margin:10px 0 0">These are estimates based on your assumptions, not guaranteed outcomes.</p></div>
+        <div class="card"><h2>How it is calculated</h2>
+          <ul class="clean small muted">
+            <li>New units = units × (1 + elasticity × price change) × (1 + lift × marketing change)</li>
+            <li>Revenue = new units × new price</li>
+            <li>COGS = new units × new unit cost</li>
+            <li>Marketing and expenses scale directly with their % change</li>
+            <li>Profit = revenue − COGS − marketing − expenses</li>
+          </ul></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="js/sample.js"></script>
+<script src="js/app.js"></script>
+<script>
+DIS.renderNav("whatif.html");
+const $ = (id) => document.getElementById(id);
+let chart = null, rows = [], base = null, current = null;
+
+function readParams() {
+  return {
+    price: +$("price").value / 100, cost: +$("cost").value / 100,
+    marketing: +$("marketing").value / 100, expenses: +$("expenses").value / 100,
+    elasticity: Math.min(0, Number($("elasticity").value) || 0),
+    marketingLift: Math.max(0, Number($("lift").value) || 0),
+  };
+}
+
+function update() {
+  ["price", "cost", "marketing", "expenses"].forEach((k) => {
+    const v = +$(k).value;
+    $(k + "Val").textContent = (v > 0 ? "+" : "") + v + "%";
+  });
+  const p = readParams();
+  const r = DIS.simulate(rows, p);
+  current = { params: p, result: r };
+
+  const cards = [
+    ["Revenue", r.revenue, base.revenue], ["Total costs", r.totalCosts, base.totalCosts, true], ["Profit", r.profit, base.profit],
+  ];
+  $("cards").innerHTML = cards.map(([label, v, b, inverse]) => {
+    const d = v - b, good = inverse ? -d : d;
+    return '<div class="card kpi"><div class="label">' + label + '</div><div class="value">' + DIS.money(v) + '</div><div class="delta ' +
+      DIS.deltaClass(good) + '">' + (d >= 0 ? "+" : "") + DIS.money(d) + " vs original</div></div>";
+  }).join("");
+
+  const lines = [
+    ["Units sold", base.units, r.units, DIS.num, false],
+    ["Revenue", base.revenue, r.revenue, DIS.money, false],
+    ["Cost of goods", base.cogs, r.cogs, DIS.money, true],
+    ["Marketing", base.marketing, r.marketing, DIS.money, true],
+    ["Other expenses", base.expenses, r.expenses, DIS.money, true],
+    ["Profit", base.profit, r.profit, DIS.money, false],
+  ];
+  $("rows").innerHTML = lines.map(([l, a, b, f, inv]) => {
+    const d = b - a, pc = a ? d / Math.abs(a) : 0, cls = DIS.deltaClass(inv ? -d : d);
+    return "<tr><td>" + l + '</td><td class="num">' + f(a) + '</td><td class="num">' + f(b) + '</td><td class="num ' + cls + '">' +
+      (d >= 0 ? "+" : "") + f(d) + '</td><td class="num ' + cls + '">' + DIS.signedPct(pc) + "</td></tr>";
+  }).join("") +
+  '<tr><td><strong>Profit margin</strong></td><td class="num">' + DIS.pct(base.margin) + '</td><td class="num">' + DIS.pct(r.margin) +
+  '</td><td class="num ' + DIS.deltaClass(r.margin - base.margin) + '">' + ((r.margin - base.margin) * 100 >= 0 ? "+" : "") + ((r.margin - base.margin) * 100).toFixed(1) +
+  ' pts</td><td class="num"></td></tr>';
+
+  $("risks").innerHTML = DIS.riskNotes(p, r, base).map((t) => "<li>" + DIS.esc(t) + "</li>").join("");
+  drawChart(r);
+}
+
+function drawChart(r) {
+  if (!DIS.chartsAvailable()) return;
+  const labels = ["Revenue", "Total costs", "Profit"];
+  const orig = [base.revenue, base.totalCosts, base.profit].map(Math.round);
+  const scen = [r.revenue, r.totalCosts, r.profit].map(Math.round);
+  if (chart) { chart.data.datasets[0].data = orig; chart.data.datasets[1].data = scen; chart.update(); return; }
+  const css = getComputedStyle(document.documentElement);
+  chart = new Chart($("barChart"), {
+    type: "bar",
+    data: { labels, datasets: [
+      { label: "Original", data: orig, backgroundColor: "#b9c2d0" },
+      { label: "Scenario", data: scen, backgroundColor: css.getPropertyValue("--c1").trim() },
+    ] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: "bottom" }, tooltip: { callbacks: { label: (c) => c.dataset.label + ": " + DIS.money(c.parsed.y) } } },
+      scales: { y: { ticks: { callback: (v) => "$" + (Math.abs(v) >= 1000 ? (v / 1000).toFixed(0) + "k" : v) } } },
+    },
+  });
+}
+
+function autoName() {
+  const p = current.params, parts = [];
+  [["price", "Price"], ["cost", "Cost"], ["marketing", "Marketing"], ["expenses", "Expenses"]].forEach(([k, l]) => {
+    if (p[k]) parts.push(l + " " + DIS.signedPct(p[k], 0));
+  });
+  return parts.length ? parts.join(", ") : "Baseline copy";
+}
+
+function flash(text) {
+  const s = $("saved"); s.hidden = false; s.className = "notice good";
+  s.innerHTML = DIS.esc(text) + ' <a href="compare.html">Compare scenarios</a>';
+}
+
+function saveOne(name, params) {
+  const result = DIS.simulate(rows, params);
+  DIS.addScenario({ name, params, result, baseline: base });
+}
+
+$("save").onclick = () => {
+  const name = $("name").value.trim() || autoName();
+  saveOne(name, current.params);
+  $("name").value = "";
+  flash('Saved "' + name + '".');
+};
+
+$("saveCases").onclick = () => {
+  const name = $("name").value.trim() || autoName();
+  Object.values(DIS.CASES).forEach((c) =>
+    saveOne(name + " — " + c.label, { ...current.params, elasticity: c.elasticity, marketingLift: c.marketingLift }));
+  $("name").value = "";
+  flash('Saved 3 versions of "' + name + '" (best, expected, worst).');
+};
+
+$("reset").onclick = () => {
+  ["price", "cost", "marketing", "expenses"].forEach((k) => ($(k).value = 0));
+  $("elasticity").value = DIS.DEFAULT_ASSUMPTIONS.elasticity;
+  $("lift").value = DIS.DEFAULT_ASSUMPTIONS.marketingLift;
+  update();
+};
+
+function init() {
+  const ds = DIS.getDataset();
+  if (!ds || !ds.rows.length) { $("empty").hidden = false; $("content").hidden = true; return; }
+  $("empty").hidden = true; $("content").hidden = false;
+  rows = ds.rows; base = DIS.totals(rows);
+  document.querySelectorAll("#form input").forEach((i) => i.addEventListener("input", update));
+  update();
+}
+$("loadSample").onclick = () => { DIS.loadSample(); init(); };
+init();
+</script>
+</body>
+</html>

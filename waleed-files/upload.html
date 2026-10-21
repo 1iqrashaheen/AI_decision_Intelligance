@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Upload Data · DecisionAI</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="topbar"></div>
+<main class="container">
+  <div class="page-head">
+    <h1>Upload &amp; preview data</h1>
+    <p>Upload a CSV or Excel file, check how it was understood, then use it across the dashboard and simulator.</p>
+  </div>
+
+  <div class="stack">
+    <div class="card">
+      <div class="dropzone" id="drop">
+        <p><strong>Drag a file here</strong> or choose one</p>
+        <p class="small">Accepted: .csv, .xlsx, .xls. Needed columns: date, product, units, price, unit cost. Marketing spend and expenses are optional.</p>
+        <input type="file" id="file" accept=".csv,.xlsx,.xls" hidden>
+        <div class="btn-row" style="justify-content:center">
+          <button class="btn" id="choose">Choose file</button>
+          <button class="btn secondary" id="sample">Use sample data</button>
+          <a class="btn secondary" href="data/sample_sales.csv" download>Download sample CSV</a>
+        </div>
+      </div>
+      <div id="message" style="margin-top:14px" hidden></div>
+    </div>
+
+    <div id="current" class="card" hidden></div>
+
+    <div id="preview" class="stack" hidden>
+      <div class="card">
+        <h2>1. Check column matching</h2>
+        <p class="card-sub">We matched your columns automatically. Change any that look wrong.</p>
+        <div class="grid cols-3" id="mapping"></div>
+      </div>
+
+      <div class="card">
+        <h2>2. Data quality</h2>
+        <div id="quality"></div>
+      </div>
+
+      <div class="card">
+        <h2>3. Preview (first 10 cleaned rows)</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr id="previewHead"></tr></thead>
+            <tbody id="previewBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn" id="use">Use this data</button>
+        <button class="btn secondary" id="cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="js/sample.js"></script>
+<script src="js/app.js"></script>
+<script>
+DIS.renderNav("upload.html");
+const $ = (id) => document.getElementById(id);
+let pending = null; // { name, headers, records }
+let cleaned = null;
+
+function say(kind, text) {
+  const m = $("message");
+  m.hidden = !text;
+  m.className = "notice " + kind;
+  m.textContent = text || "";
+}
+
+function showCurrent() {
+  const ds = DIS.getDataset(), el = $("current");
+  if (!ds) { el.hidden = true; return; }
+  el.hidden = false;
+  el.innerHTML = '<div class="btn-row" style="justify-content:space-between;align-items:center">' +
+    "<div><h2 style=\"margin:0 0 2px\">Active dataset</h2><span class=\"muted small\">" + DIS.esc(ds.name) + " · " + DIS.num(ds.rows.length) +
+    " rows · loaded " + new Date(ds.loadedAt).toLocaleString() + "</span></div>" +
+    '<div class="btn-row"><a class="btn small" href="index.html">View dashboard</a><a class="btn secondary small" href="whatif.html">Run what-if</a>' +
+    '<button class="btn danger small" id="clear">Remove data</button></div></div>';
+  $("clear").onclick = () => { if (confirm("Remove the active dataset? Saved scenarios are kept.")) { DIS.clearDataset(); showCurrent(); } };
+}
+
+function handleFile(file) {
+  say("", "");
+  $("preview").hidden = true;
+  DIS.parseFile(file).then(({ headers, records }) => {
+    if (!records.length) return say("bad", "The file has headers but no data rows.");
+    pending = { name: file.name, headers, records };
+    renderPreview(DIS.detectMapping(headers));
+  }).catch((e) => say("bad", e.message));
+}
+
+function renderPreview(mapping) {
+  cleaned = DIS.cleanRows(pending.records, mapping);
+  const missingRequired = ["date", "product", "units", "price", "unit_cost"].filter((f) => !mapping[f]);
+
+  // Column mapping selects
+  $("mapping").innerHTML = DIS.REQUIRED.map((f) => {
+    const optional = f === "marketing_spend" || f === "expenses";
+    return '<div class="field"><label for="map_' + f + '">' + DIS.LABELS[f] + (optional ? ' <span class="hint">(optional)</span>' : "") + "</label>" +
+      '<select id="map_' + f + '" data-field="' + f + '"><option value="">— not in file —</option>' +
+      pending.headers.map((h) => '<option value="' + DIS.esc(h) + '"' + (mapping[f] === h ? " selected" : "") + ">" + DIS.esc(h) + "</option>").join("") +
+      "</select></div>";
+  }).join("");
+  document.querySelectorAll("#mapping select").forEach((s) => s.addEventListener("change", () => {
+    const m = {};
+    document.querySelectorAll("#mapping select").forEach((x) => (m[x.dataset.field] = x.value));
+    renderPreview(m);
+  }));
+
+  // Quality report
+  const r = cleaned.report;
+  const items = [];
+  items.push(["good", DIS.num(r.kept) + " of " + DIS.num(r.totalRows) + " rows are usable."]);
+  if (r.duplicates) items.push(["warn", r.duplicates + " duplicate rows will be removed."]);
+  if (r.droppedMissing) items.push(["warn", r.droppedMissing + " rows are missing date, product, units, price or cost and will be dropped."]);
+  if (r.droppedInvalid) items.push(["warn", r.droppedInvalid + " rows have invalid numbers, negatives or unreadable dates and will be dropped."]);
+  if (r.filledZero) items.push(["warn", r.filledZero + " blank marketing/expense values will be treated as 0."]);
+  if (r.outliers.length) items.push(["warn", r.outliers.length + " rows have unusually high or low units (more than 3 standard deviations from average). They are kept — please review."]);
+  if (!r.duplicates && !r.droppedMissing && !r.droppedInvalid && !r.outliers.length) items.push(["good", "No duplicates, missing values or unusual values found."]);
+  $("quality").innerHTML = '<ul class="clean">' + items.map(([k, t]) => '<li><span class="badge ' + k + '">' + (k === "good" ? "OK" : "Check") + "</span> " + DIS.esc(t) + "</li>").join("") + "</ul>";
+
+  // Preview table
+  $("previewHead").innerHTML = ["Date", "Product", "Units", "Price", "Unit cost", "Marketing", "Expenses"].map((h, i) => "<th" + (i > 1 ? ' class="num"' : "") + ">" + h + "</th>").join("");
+  $("previewBody").innerHTML = cleaned.rows.slice(0, 10).map((x) =>
+    "<tr><td>" + DIS.esc(x.date) + "</td><td>" + DIS.esc(x.product) + '</td><td class="num">' + DIS.num(x.units) + '</td><td class="num">' + DIS.money(x.price) +
+    '</td><td class="num">' + DIS.money(x.unit_cost) + '</td><td class="num">' + DIS.money(x.marketing_spend) + '</td><td class="num">' + DIS.money(x.expenses) + "</td></tr>").join("") ||
+    '<tr><td colspan="7" class="muted">No usable rows with the current column matching.</td></tr>';
+
+  $("preview").hidden = false;
+  const block = missingRequired.length || !cleaned.rows.length;
+  $("use").disabled = block;
+  if (missingRequired.length) say("bad", "Please match these required columns: " + missingRequired.map((f) => DIS.LABELS[f]).join(", ") + ".");
+  else if (!cleaned.rows.length) say("bad", "No usable rows after cleaning. Check the column matching above.");
+  else say("", "");
+}
+
+$("use").onclick = () => {
+  const ok = DIS.setDataset({ name: pending.name, loadedAt: new Date().toISOString(), rows: cleaned.rows, report: cleaned.report });
+  if (!ok) return say("bad", "The browser could not store this file (too large for local storage). Try a smaller file.");
+  $("preview").hidden = true; pending = cleaned = null;
+  say("good", "Data saved. Open the dashboard or What-If page to use it.");
+  showCurrent();
+};
+$("cancel").onclick = () => { $("preview").hidden = true; pending = cleaned = null; say("", ""); };
+$("sample").onclick = () => { DIS.loadSample(); $("preview").hidden = true; say("good", "Sample data loaded."); showCurrent(); };
+$("choose").onclick = () => $("file").click();
+$("file").onchange = (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); e.target.value = ""; };
+
+const drop = $("drop");
+["dragenter", "dragover"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add("drag"); }));
+["dragleave", "drop"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove("drag"); }));
+drop.addEventListener("drop", (e) => { if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+
+showCurrent();
+</script>
+</body>
+</html>
