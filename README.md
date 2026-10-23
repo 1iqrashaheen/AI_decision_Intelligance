@@ -1,39 +1,60 @@
-# DecisionAI — Main website pages
+# AI Business Assistant
 
-Four connected pages for the AI Decision Intelligence & What-If Simulator.
+This module is part of the AI Decision Intelligence project.
 
-## Run it
-Open `index.html` in a browser (needs internet once for Chart.js and the Excel reader, loaded from cdnjs).
-Or serve the folder: `python3 -m http.server 8000` and visit http://localhost:8000.
+It uses the Groq API to answer business questions using sales data, analysis results, what-if simulations, forecasts, and recommendations.
 
-## Pages
-| Page | File | What it does |
-|---|---|---|
-| Dashboard | `index.html` | KPI cards, revenue/profit trend chart, revenue by product chart, product table, latest scenario, data quality |
-| Upload Data | `upload.html` | CSV/Excel upload, column matching, quality checks, 10-row preview, "use this data" |
-| What-If | `whatif.html` | Sliders for price, cost, marketing, expenses; elasticity assumptions; live result cards, chart, table, risks; save scenarios |
-| Compare Scenarios | `compare.html` | Select saved scenarios, profit chart, side-by-side table, inputs and risks |
+## Setup
 
-## Shared style and logic
-- `css/style.css` — one stylesheet (colors, cards, forms, tables, buttons).
-- `js/app.js` — shared script: storage, CSV/Excel parsing, cleaning, aggregation, scenario engine, formatting, navigation.
-- `js/sample.js` + `data/sample_sales.csv` — built-in sample dataset (48 rows, 4 products, 12 months).
+1. Clone or download the project.
+2. Open the project folder in VS Code.
+3. Create a Python virtual environment:
 
-## How pages are connected
-Pages share data through the browser's localStorage: the dataset chosen on Upload feeds the Dashboard and What-If; scenarios saved on What-If feed Compare and the Dashboard's latest-scenario card.
+   python -m venv .venv
 
-## Scenario formulas
-- new units = units × (1 + elasticity × price change) × (1 + marketing lift × marketing change)
-- revenue = new units × price × (1 + price change)
-- COGS = new units × unit cost × (1 + cost change)
-- marketing and expenses = original × (1 + their change)
-- profit = revenue − COGS − marketing − expenses
+4. Activate the environment on Windows:
 
-Defaults: elasticity −1.2, marketing lift 0.15. Best/expected/worst cases vary these two assumptions (−0.6/0.25, −1.2/0.15, −1.8/0.05).
-Results are estimates, not guaranteed outcomes.
+   .\.venv\Scripts\Activate.ps1
 
-## Checked
-Calculation tests against hand-computed values pass, as do cleaning tests (duplicates, missing values, invalid numbers, bad dates, quoted commas).
+5. Install the libraries:
 
-## Next steps (from the full project)
-Replace localStorage with FastAPI + PostgreSQL, add authentication, the LLM assistant, forecasting, and PDF/CSV export. `DIS.simulate` is the function to port to the backend.
+   pip install -r requirements.txt
+
+## Groq API Key
+
+Groq offers a free API tier with usage limits.
+
+1. Visit https://console.groq.com/
+2. Create a free account.
+3. Open the API Keys section.
+4. Generate your own API key.
+5. Create a `.env` file in the project folder and add:
+
+   GROQ_API_KEY=your_api_key_here
+
+Replace the example value with your own key. Do not upload the `.env` file to GitHub.
+
+## Run the Assistant
+
+For testing with the Online Retail II dataset, place the Excel file inside the `data` folder.
+
+Run:
+
+python assistant/ai_assistant.py
+
+## Test Module Integration
+
+To test the assistant with sample results instead of the retail dataset, run:
+
+python assistant/test_assistant.py
+
+## Backend Integration
+
+The main backend can use:
+
+- `ask_assistant()` from `ai_assistant.py`
+- `prepare_business_data()` from `data_connection.py`
+
+These functions allow the assistant to receive business information from other project modules.
+
+The sample dataset will be replaced with the cleaned dataset and actual results from the team.
