@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String           @id @default(cuid())
+  name           String
+  email          String           @unique
+  passwordHash   String
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  uploadedFiles  UploadedFile[]
+  analyses       AnalysisHistory[]
+  scenarios      Scenario[]
+
+  @@map("users")
+}
+
+model UploadedFile {
+  id          String   @id @default(cuid())
+  userId      String
+  filename    String
+  fileType    String?
+  fileSize    Int?
+  storagePath String?
+  metadata    Json?
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  analyses    AnalysisHistory[]
+
+  @@index([userId, createdAt])
+  @@map("uploaded_files")
+}
+
+model AnalysisHistory {
+  id          String       @id @default(cuid())
+  userId      String
+  fileId      String?
+  title       String
+  results     Json
+  summary     String?
+  createdAt   DateTime     @default(now())
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  file        UploadedFile? @relation(fields: [fileId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([fileId])
+  @@map("analysis_history")
+}
+
+model Scenario {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  description String?
+  inputs      Json
+  results     Json?
+  assumptions String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, updatedAt])
+  @@map("scenarios")
+}
