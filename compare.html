@@ -31,6 +31,16 @@
       </div>
     </div>
 
+    <div class="card" style="margin-top:16px">
+      <h2>Export Report</h2>
+      <p class="card-sub">Generate and download official reports via FastAPI backend.</p>
+      <div class="btn-row" style="flex-direction:column;gap:8px">
+        <button class="btn small" id="downloadPdf">📄 Download PDF Report</button>
+        <button class="btn secondary small" id="downloadCsv">📊 Download CSV Report</button>
+      </div>
+      <div id="exportStatus" class="muted small" style="margin-top:8px"></div>
+    </div>
+
     <div class="stack">
       <div class="card">
         <h2>Profit comparison</h2>
@@ -53,6 +63,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="js/app.js"></script>
+<script src="js/api.js"></script>
 <script>
 DIS.renderNav("compare.html");
 const $ = (id) => document.getElementById(id);
@@ -137,6 +148,51 @@ function renderCompare() {
 
 $("all").onclick = () => { scenarios.forEach((s) => selected.add(s.id)); renderList(); renderCompare(); };
 $("none").onclick = () => { selected.clear(); renderList(); renderCompare(); };
+
+function getReportPayload() {
+  const chosen = scenarios.filter((s) => selected.has(s.id));
+  const ds = DIS.getDataset();
+  const t = ds ? DIS.totals(ds.rows) : { revenue: 0, profit: 0 };
+  return {
+    title: "AI Decision Intelligence — Scenario Report",
+    kpis: [
+      { label: "Baseline Revenue", value: t.revenue || 0 },
+      { label: "Baseline Profit", value: t.profit || 0 }
+    ],
+    scenarios: (chosen.length ? chosen : scenarios).map((s) => ({
+      name: s.name,
+      revenue: s.result.revenue,
+      cogs: s.result.cogs,
+      profit: s.result.profit
+    })),
+    assumptions: (chosen.length ? chosen : scenarios).flatMap((s) => [
+      `${s.name}: Price ${DIS.signedPct(s.params.price)}, Elasticity ${s.params.elasticity}, Marketing Lift ${s.params.marketingLift}`
+    ])
+  };
+}
+
+$("downloadPdf").onclick = async () => {
+  const st = $("exportStatus");
+  st.textContent = "Generating PDF report via FastAPI...";
+  try {
+    await DIS_API.downloadReport("pdf", getReportPayload());
+    st.textContent = "✓ PDF downloaded successfully.";
+  } catch (err) {
+    st.textContent = "FastAPI backend offline. Start backend at port 8001 to generate PDF.";
+  }
+};
+
+$("downloadCsv").onclick = async () => {
+  const st = $("exportStatus");
+  st.textContent = "Generating CSV report via FastAPI...";
+  try {
+    await DIS_API.downloadReport("csv", getReportPayload());
+    st.textContent = "✓ CSV downloaded successfully.";
+  } catch (err) {
+    st.textContent = "FastAPI backend offline. Start backend at port 8001 to generate CSV.";
+  }
+};
+
 load();
 </script>
 </body>
