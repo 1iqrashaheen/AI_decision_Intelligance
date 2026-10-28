@@ -1,57 +1,19 @@
+"""A small example that runs without an API call."""
+import pandas as pd
 
-from ai_assistant import ask_assistant
-from data_connection import prepare_business_data
+from assistant.ai_assistant import ask_assistant
+from assistant.data_connection import prepare_business_data
+from business_analysis import analyze_business_data
 
 
-# Temporary results from other project modules
-analysis = """
-Total Revenue: £500,000
-Total Expenses: £350,000
-Total Profit: £150,000
-"""
+def main():
+    df = pd.DataFrame([{"date":"2024-01-01","product":"Example","units":10,"price":20,
+                        "unit_cost":8,"marketing_spend":5,"expenses":15}])
+    context = prepare_business_data(analyze_business_data(df,"example"))
+    for question in ["What is our revenue?","What is our profit?","Which product has the lowest margin?","What is next month's revenue?"]:
+        print(question)
+        print(ask_assistant(question,context,mode="off"))
 
-simulation = """
-Scenario: Increase product prices by 10%
-Original Revenue: £500,000
-Estimated Revenue: £550,000
-Original Profit: £150,000
-Estimated Profit: £200,000
-Assumption: Number of products sold and expenses remain unchanged.
-"""
 
-forecasting = """
-Forecast Period: Next Month
-Estimated Revenue: £520,000
-Method: Example forecast for testing only.
-"""
-
-recommendations = """
-Consider testing the new prices before applying them permanently.
-Higher prices may reduce customer demand.
-The estimated profit increase is not guaranteed.
-"""
-
-business_data = prepare_business_data(
-    analysis=analysis,
-    simulation=simulation,
-    forecasting=forecasting,
-    recommendations=recommendations
-)
-
-questions = [
-    "What is my current profit?",
-    "What happens if I increase prices by 10%?",
-    "What is my expected revenue next month?",
-    "What do you recommend?",
-    "Which country generated the highest revenue?"
-]
-
-for question in questions:
-    print(f"\nYou: {question}")
-
-    try:
-        answer = ask_assistant(question, business_data)
-        print(f"Assistant: {answer}")
-
-    except Exception as error:
-        print("Error:", error)
+if __name__ == "__main__":
+    main()

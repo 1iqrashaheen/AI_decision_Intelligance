@@ -48,7 +48,7 @@
 
       <div class="card">
         <h2>Save this scenario</h2>
-        <div class="field"><label for="name">Scenario name</label><input type="text" id="name" placeholder="e.g. 10% price increase"></div>
+        <div class="field"><label for="name">Scenario name</label><input type="text" id="name" maxlength="90" placeholder="e.g. 10% price increase"></div>
         <div class="btn-row">
           <button class="btn" id="save">Save scenario</button>
           <button class="btn secondary" id="saveCases" title="Saves best, expected and worst versions of the current inputs">Save best / expected / worst</button>
@@ -180,9 +180,9 @@ function flash(text) {
   s.innerHTML = DIS.esc(text) + ' <a href="compare.html">Compare scenarios</a>';
 }
 
-function saveOne(name, params) {
+function saveOne(name, params, caseName = "custom") {
   const result = DIS.simulate(rows, params);
-  DIS.addScenario({ name, params, result, baseline: base });
+  DIS.addScenario({ name, params, result, baseline: base, datasetKey: DIS.datasetKey(DIS.getDataset()), case: caseName });
 }
 
 $("save").onclick = () => {
@@ -194,8 +194,8 @@ $("save").onclick = () => {
 
 $("saveCases").onclick = () => {
   const name = $("name").value.trim() || autoName();
-  Object.values(DIS.CASES).forEach((c) =>
-    saveOne(name + " — " + c.label, { ...current.params, elasticity: c.elasticity, marketingLift: c.marketingLift }));
+  Object.entries(DIS.CASES).forEach(([key, c]) =>
+    saveOne(name + " — " + c.label, { ...current.params, elasticity: c.elasticity, marketingLift: c.marketingLift }, key));
   $("name").value = "";
   flash('Saved 3 versions of "' + name + '" (best, expected, worst).');
 };

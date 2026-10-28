@@ -31,6 +31,15 @@ const DIS = (() => {
     },
   };
   const getDataset = () => store.get(KEY_DATA, null);
+  const datasetKey = (ds) => ds ? ds.name + ":" + ds.loadedAt : "";
+  function toBackendCSV(ds) {
+    const columns = ["date", "product", "units", "price", "unit_cost", "marketing_spend", "expenses"];
+    const quote = value => '"' + String(value ?? "").replaceAll('"', '""') + '"';
+    // The old upload page does not record which expense cells it filled with zero.
+    const imputed = ds.report?.filledZero > 0;
+    return [columns.join(","), ...ds.rows.map(row => columns.map(key =>
+      quote(imputed && ["marketing_spend", "expenses"].includes(key) ? "" : row[key])).join(","))].join("\n");
+  }
   const setDataset = (ds) => store.set(KEY_DATA, ds);
   const clearDataset = () => { try { localStorage.removeItem(KEY_DATA); } catch (e) {} };
   const getScenarios = () => store.get(KEY_SC, []);
@@ -290,6 +299,7 @@ const DIS = (() => {
     const pages = [
       ["index.html", "Dashboard"], ["upload.html", "Upload Data"],
       ["whatif.html", "What-If"], ["compare.html", "Compare Scenarios"],
+      ["assistant.html", "AI Assistant"],
     ];
     const el = document.getElementById("topbar");
     if (!el) return;
@@ -303,7 +313,7 @@ const DIS = (() => {
 
   return {
     REQUIRED, LABELS, DEFAULT_ASSUMPTIONS, CASES,
-    getDataset, setDataset, clearDataset, getScenarios, addScenario, deleteScenario, setScenarios,
+    getDataset, datasetKey, toBackendCSV, setDataset, clearDataset, getScenarios, addScenario, deleteScenario, setScenarios,
     parseCSV, parseFile, detectMapping, cleanRows, loadSample,
     totals, byMonth, byProduct, simulate, riskNotes,
     money, num, pct, signedPct, deltaClass, monthLabel, esc, renderNav, chartsAvailable,

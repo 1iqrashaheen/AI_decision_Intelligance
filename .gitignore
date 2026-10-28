@@ -3,3 +3,6 @@
 __pycache__/
 *.pyc
 data/
+output/
+tmp/
+.pytest_cache/

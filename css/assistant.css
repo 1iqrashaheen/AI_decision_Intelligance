@@ -1,0 +1,27 @@
+.assistant-layout { display:grid; grid-template-columns:320px minmax(0,1fr); gap:20px; align-items:start; }
+.data-actions { margin-top:16px; }
+input[type="file"] { max-width:100%; font:inherit; font-size:.85rem; }
+.hint { font-size:.8rem; color:var(--muted); }
+.chat-panel { display:flex; flex-direction:column; min-height:600px; }
+.chat-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.chat-heading h2 { margin:0; }
+.messages { flex:1; max-height:580px; min-height:280px; overflow:auto; padding:20px 0; display:flex; flex-direction:column; gap:16px; }
+.message { white-space:pre-wrap; overflow-wrap:anywhere; padding:14px 16px; border-radius:10px; max-width:94%; font-size:.94rem; }
+.message.assistant { align-self:flex-start; background:var(--bg); border:1px solid var(--border); }
+.message.user { align-self:flex-end; background:var(--brand-soft); color:var(--text); }
+.message.error { border-color:var(--bad); }
+.message .provenance { white-space:normal; margin-top:12px; font-size:.76rem; color:var(--muted); }
+.message details { margin-top:8px; }
+.suggestions { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+.suggestions button { font:inherit; font-size:.78rem; color:var(--brand); background:white; border:1px solid var(--border); border-radius:16px; padding:6px 10px; cursor:pointer; }
+.question-row { display:flex; gap:10px; align-items:stretch; }
+textarea { width:100%; resize:vertical; font:inherit; border:1px solid var(--border); border-radius:8px; padding:10px; color:var(--text); }
+textarea:focus { outline:2px solid var(--brand-soft); border-color:var(--brand); }
+details summary { cursor:pointer; color:var(--brand); font-size:.85rem; }
+#findings, #limitations { padding-left:20px; font-size:.85rem; }
+#findings li, #limitations li { margin-bottom:8px; }
+.analysis-card { margin-top:20px; }
+.analysis-card .grid { margin-bottom:20px; }
+.analysis-card .value { overflow-wrap:anywhere; font-size:1.25rem; }
+@media(max-width:900px) { .assistant-layout { grid-template-columns:1fr; } .chat-panel { min-height:500px; } .topbar-inner { height:auto; min-height:58px; flex-wrap:wrap; padding-top:12px; padding-bottom:12px; gap:12px; } }
+@media(max-width:520px) { .question-row { flex-direction:column; } .message { max-width:100%; } }
