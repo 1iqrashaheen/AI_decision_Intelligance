@@ -1,0 +1,8 @@
+{
+  "source_commit": "3d9f77e787b2bb0ea82eb7abaa0e913f0abe9193",
+  "target": "net_sales_gbp",
+  "currency": "GBP",
+  "start": "2010-12-01",
+  "end": "2011-12-09",
+  "daily_series_sha256": "2ff10fe8931f67d6e02ef435114102f52364d6a0ec48b1cdabf2e920092ae9f7"
+}
