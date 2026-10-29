@@ -1,4 +1,4 @@
-"""Prepare uploaded columns with Fazeela's module and keep the quality notes."""
+"""Prepare uploaded columns with Iqra's module and keep the quality notes."""
 from business_analysis import prepare_dataframe
 from backend.app.schemas.common import ColumnInfo, QualityReport
 
