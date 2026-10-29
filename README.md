@@ -23,6 +23,7 @@ The FastAPI preview has been deployed under GitHub **`1iqrashaheen`** in Iqra's 
 - [Project structure](#project-structure)
 - [Installation and local setup](#installation-and-local-setup)
 - [Environment variables](#environment-variables)
+- [Authentication and login prompts](#authentication-and-login-prompts)
 - [Using the application](#using-the-application)
 - [Business data analysis](#business-data-analysis)
 - [Iqra's Assistant](#iqras-assistant)
@@ -190,7 +191,36 @@ ASSISTANT_MODE=auto
 MAX_UPLOAD_MB=10
 ```
 
-`backend/.env.example` also lists `DATABASE_URL` and `JWT_SECRET` for the separate database/authentication contribution. FastAPI does **not** use those settings to store datasets or authenticate users. Adding them alone does not connect a database. `main.py` does not load `backend/.env`.
+Use the root `.env.example` for this application. `backend/.env.example` is only a settings reference; `main.py` does not load `backend/.env`. FastAPI does **not** use `DATABASE_URL` or `JWT_SECRET` to store datasets or authenticate users. Adding those variables alone does not connect a database. The separate service's settings are explained under [Database and external services](#database-and-external-services).
+
+## Authentication and login prompts
+
+**The current local FastAPI backend does not ask you to log in. You do not need Arham's account or password.** Start it from the root with the Uvicorn command above and visit `http://127.0.0.1:8001/docs` or `/api/health`. Both respond without credentials. There are no `/api/auth/register`, `/api/auth/login`, or `/api/auth/me` routes in this integration; those paths return 404.
+
+The health response's `"author": "Muhammad Arham"` and the frontend badge's author tooltip credit the original backend contributor. They do not identify a signed-in user or require that person's credentials.
+
+If another screen asks for an account, check its address and the command that opened it:
+
+| Prompt | What it means and what to do |
+|---|---|
+| A `vercel.com` sign-in or preview SSO screen | Hosting/deployment access, not application login. Use Iqra's Vercel account (`iqrashaheen271@gmail.com`) linked with `1iqrashaheen`. Ask the Vercel project owner for access if your account is refused. |
+| Git Credential Manager or a GitHub sign-in during `git push` | Repository access, not the running backend. Select `1iqrashaheen`; do not select another saved account. |
+| A PostgreSQL or pgAdmin login | Database administration, not FastAPI login. It uses the database role/password set by the database owner. A running PostgreSQL service does not connect it to this project. |
+| A login form on a separate teammate-hosted URL | Its access rules cannot be inferred from this local code. Confirm the exact URL and service with its owner before using any credentials. |
+
+For this review, neither root `.env` nor `backend/.env` existed, and the terminal environment had no database, JWT, or Groq key configured. No personal credentials were printed or requested. The reported different-user prompt has not been identified because its URL/message has not yet been supplied.
+
+### Creating your own application account later
+
+Saud's separate branch implements registration and login. Once that service is repaired, configured, and connected, its intended flow is:
+
+1. Send `POST /api/auth/register` with your own `name`, `email`, and `password`. Names must be 2–80 characters and passwords 8–128 characters. Email is normalized to lowercase; an existing email returns 409.
+2. Registration hashes the password with bcrypt and returns user details plus a JWT. `POST /api/auth/login` accepts your own email/password and issues another token valid for two hours.
+3. Send `Authorization: Bearer <token>` for `/api/auth/me`, files, analysis history, and saved scenarios. Invalid/expired tokens return 401. Do not publish or commit the token.
+
+There is no Arham-only account restriction in that source. You should create your own account once the service is available; registration is not currently available on the FastAPI/Vercel application. There is also no integrated registration/login page, password-reset flow, or deployed database proof. Do not use the Vercel/GitHub password as an API credential.
+
+If you are trying to use an API hosted by Arham, ask him for its exact base URL, current source branch/commit, health/docs URLs, and whether the prompt is Vercel protection or app authentication. Ask for an invitation for your own account or a documented registration URL, not his personal password. Database implementation belongs to Saud, as described below.
 
 ## Using the application
 
@@ -386,13 +416,68 @@ The loader writes `whatif/local_data/retail_clean.csv` and uses the last 12 full
 
 ## Database and external services
 
-No database is needed locally, but browser storage is not shared backend storage, and there is no integrated login/user-isolation layer here.
+### What is connected now
 
-Saud's separate branch contains PostgreSQL models for users, file metadata, analysis history, and scenarios, with JWT authentication and protected Express routes. Settings include `DATABASE_URL`, `JWT_SECRET` (at least 32 characters), `CLIENT_ORIGIN`, and `PORT` (default 4000). Its health route queries PostgreSQL; FastAPI's does not.
+**No database is connected to the current backend.** `backend/app/core/store.py` stores pandas DataFrames and metadata in two Python dictionaries. The Python requirements contain no PostgreSQL client/ORM, the app has no database queries or migrations, and there is no call to Saud's service. Browser `localStorage`/`sessionStorage` do not provide shared server storage or user isolation.
 
-The published Node branch needs repairs before its package scripts work: `package.json` references `src/server.js`, while its server/config/route files are flat at the root, and its Prisma schema location needs configuration. It has not been deployed or integrated here. Do not run an invented migration/setup sequence or assume setting `DATABASE_URL` connects FastAPI.
+A local `postgresql-x64-18` Windows service was running during the review, but the app had no `DATABASE_URL`. This proves PostgreSQL is installed/running, not that the project database, tables, roles, or connection work. No connection was attempted using guessed credentials.
 
-Before production, identify/provision shared storage, configure credentials privately, connect dataset/metadata reads and writes in `backend/app/core/store.py` and its consumers, then test across workers/restarts. A separately hosted memory-only process still loses data on restart. Local SQLite and Vercel temporary files do not provide shared persistence. The storage service/credentials remain a project-owner decision.
+### What Saud's module implements
+
+The database contribution uses **PostgreSQL**, **Prisma 6**, **Express**, bcrypt, and JWT on `Saud_Masood_Task` at `667e156`. These files are not imported into the integration branch.
+
+| Files / area | Implemented in the separate source | Missing or unverified |
+|---|---|---|
+| `schema.prisma` | `User`, `UploadedFile`, `AnalysisHistory`, `Scenario`; ownership relations and indexes. | No committed migration directory or proof that these tables exist in a configured database. |
+| `prisma.js` | Creates a Prisma client. | No verified connection, generated-client setup, or environment for the integrated app. |
+| `auth.routes.js`, `auth.js` | Register/login/me, hashed passwords, two-hour JWTs, Bearer-token middleware. | Not running here or connected to a frontend login flow. |
+| `files.routes.js` | Create/list/detail for user-owned file metadata. | It explicitly does not store CSV/Excel bytes or parsed dataset rows; metadata alone cannot restore a DataFrame. No update/delete routes in this file. |
+| `analyses.routes.js` | Create/list/detail/delete for user-owned saved results; checks file ownership. | No update route; FastAPI does not call these queries. |
+| `scenarios.routes.js` | Create/list/detail/update/delete with user ownership filters. | Not connected to browser scenarios or FastAPI; the dataset-ID/ownership contract still needs agreement. |
+| `server.js` | Protected route mounting; `/api/health` runs `SELECT 1`. | Startup/import paths are broken; no published service URL or test results. |
+
+Absent CRUD methods are listed accurately; they should be added only if required by the agreed feature scope, not invented as part of documentation work.
+
+### Confirmed blockers and configuration
+
+`package.json` starts `src/server.js`, but that file does not exist. Published files are flat at the root, while `server.js` expects `./config/prisma`, `./middleware/auth`, and `./routes/...`. Route files expect `../config/prisma` and `../utils/asyncHandler`. A source-tree check found **15 unresolved relative imports**. Fixing only the start command would not fix the service.
+
+The root `schema.prisma` location itself is valid: [Prisma 6 checks both root and `prisma/` schema locations](https://www.prisma.io/docs/orm/v6/prisma-schema/overview/location). The earlier README suggestion that its root location necessarily needed repair was incorrect. Migration generation/application and a successful database query remain unverified. There are no committed database-module tests or migration files in the reviewed branch.
+
+After Saud repairs the service, its owner needs to supply/configure the following privately in that service's environment:
+
+| Variable | Purpose |
+|---|---|
+| `DATABASE_URL` | Authorized PostgreSQL connection string for the intended database/role; use the provider's TLS/connection settings. |
+| `JWT_SECRET` | Random server-side signing secret, at least 32 characters; not a user password or frontend setting. |
+| `CLIENT_ORIGIN` | Comma-separated frontend origins allowed by the Express service. This is distinct from FastAPI's `CORS_ORIGINS`. |
+| `PORT` | Service port; defaults to 4000. |
+| `NODE_ENV` | Optional Prisma logging mode. |
+
+Example placeholders for **the repaired Node service only**, not the current FastAPI `.env`:
+
+```dotenv
+DATABASE_URL=postgresql://app_user:replace_me@db-host:5432/decision_ai
+JWT_SECRET=replace_with_a_random_secret_at_least_32_characters
+CLIENT_ORIGIN=http://127.0.0.1:8001
+PORT=4000
+```
+
+Do not use these placeholders as real credentials. Before claiming a connection, verify a migrated database and the Node health response `{"status":"ok","database":"connected"}`. FastAPI's `{"status":"ok",...}` does not perform that database check.
+
+Saud should provide working installation, client-generation, and migration instructions for his repaired layout, including production migration handling. The currently published `npm start` cannot work, so this guide does not present it as a working setup step. A host/connection string and an authorized database role are still needed; no personal database password from Arham is necessary to run FastAPI locally.
+
+Before production, agree whether FastAPI will access shared storage directly or through Saud's service. Persist **actual uploaded content/rows and cleaning metadata**, not only file names or result summaries. Replace/connect `backend/app/core/store.py` and the analysis, baseline, chat, and reporting consumers. Define user ownership, dataset IDs, and token handling before enabling protected routes. Verify the same uploaded dataset can be read by different workers and after restart. A separately hosted memory-only process still loses data; local SQLite or Vercel temporary files are not shared persistence.
+
+### Ready-to-send message for Saud
+
+> Hi Saud, I reviewed Module 08 on `Saud_Masood_Task` (`667e156`). PostgreSQL/Prisma models, register/login/me, JWT middleware, and several user-scoped file/history/scenario routes are present, but the module is not connected to our FastAPI integration.
+>
+> Please publish an integration-ready commit that fixes `package.json` pointing to missing `src/server.js` and the 15 relative imports expecting `config/`, `middleware/`, `routes/`, and `utils/` folders while files are flat. Root `schema.prisma` is a valid Prisma 6 location; please include the actual migrations and verified generate/migrate/start instructions, a safe environment template, and a database-backed health check.
+>
+> `files.routes.js` currently saves metadata only. Please complete or agree a durable store for the actual uploaded CSV/Excel content or parsed rows plus cleaning metadata, and define its dataset-ID/user-ownership interface with Arham so FastAPI's `backend/app/core/store.py`, analysis, baseline, chat, and reports can retrieve the same dataset across workers/restarts. Wire or document the connection rather than leaving two separate backends.
+>
+> Please verify registration with my own account, login/me, expired/missing-token rejection, cross-user access rejection, the agreed file/history/scenario operations, and persistence after restart/from another worker. Send the verified commit, service/health URLs, environment variable names, and setup/test results. Configure any connection string or signing secret privately; do not send personal passwords or commit secrets. Let us know which remaining CRUD actions are actually in scope. We will merge into `main` after these checks pass.
 
 Groq is the assistant's optional external service. Configure its key on the server and confirm a `groq_grounded` response if model access is required. Automated offline/mocked tests do not establish live service availability.
 
@@ -474,6 +559,7 @@ For a frontend kept on Vercel, configure `/api/:path*` to rewrite to the verifie
 | Charts fail | Check CDN access; comparison tables/downloads can still be available. |
 | Database variables do nothing | Database integration is not implemented in FastAPI; copied Node settings do not connect it. |
 | Different deployment creator | Verify commit author/committer and linked GitHub account. Older attribution remains historical. |
+| Asked to log in as Arham | Local FastAPI has no login. Check whether this is an author credit, hosting/GitHub prompt, database tool, or another service URL; see Authentication and login prompts. |
 
 ## Source history and attribution
 

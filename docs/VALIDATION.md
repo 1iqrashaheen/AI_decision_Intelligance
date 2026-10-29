@@ -4,6 +4,36 @@ Setup, current ownership, API usage, and deployment instructions are in the
 [main README](../README.md). Earlier checks below are historical evidence,
 not a claim that production or shared database storage is complete.
 
+## Authentication and database investigation - 2026-10-29
+
+- Fetched current branches. `integration-branch` was `fdac831`; `main` was
+  `9ae9d22`. No later database integration was present.
+- Local FastAPI health and docs returned 200 without credentials; OpenAPI had
+  no security schemes or auth/login/register routes. `/api/auth/register`,
+  `/api/auth/login`, and `/api/auth/me` returned 404. The health author field
+  is contributor metadata, not a signed-in user.
+- Neither `.env` nor `backend/.env` existed; the process environment had no
+  database, JWT, or Groq key configured. Values were not disclosed. The local
+  PostgreSQL 18 service was running, but no application connection or tables
+  were verified and no credentials were guessed.
+- Reviewed all database/auth source files on `Saud_Masood_Task` (`667e156`).
+  Verified register/login/me, bcrypt hashing, two-hour JWTs, owner-scoped file
+  metadata/history/scenario queries, and `SELECT 1` health logic in source only.
+- The source tree has no `src/server.js`, 15 unresolved relative imports,
+  no committed migrations, and no database-module tests. File routes explicitly
+  store metadata only; there is no shared upload-content storage or FastAPI
+  store adapter. File update/delete and history update routes are absent;
+  their necessity depends on agreed scope. Scenario CRUD is present.
+- Correction to the earlier documentation: root `schema.prisma` is a supported
+  default for Prisma 6; its location is not itself a confirmed defect.
+- Updated the README with local startup, account/hosting distinctions,
+  conditional self-registration instructions, separate-service settings,
+  exact blockers, and a ready-to-send message for Saud. Removed misleading
+  unused database/JWT assignments from the FastAPI settings reference.
+- No changes were made to Saud's branch or application authentication/storage
+  behavior. The unidentified external login prompt still needs its exact
+  URL/message. Database connection and production merge remain unverified.
+
 ## Documentation consolidation - 2026-10-29
 
 - Reviewed all ten project README files and the older API contract. Moved
