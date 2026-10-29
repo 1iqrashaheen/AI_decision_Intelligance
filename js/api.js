@@ -1,10 +1,13 @@
 /**
  * DecisionAI API Client
  * Author: Muhammad Arham (Module 07 — Backend connections)
- * Connects frontend pages to the FastAPI backend at http://localhost:8001/api
+ * Connects frontend pages to the FastAPI backend on the same origin.
  */
 const DIS_API = (() => {
-  const API_BASE = window.location.port === "8001" ? window.location.origin + "/api" : "http://localhost:8001/api";
+  const localPreview = ["localhost", "127.0.0.1"].includes(window.location.hostname)
+    && window.location.port !== "8001";
+  const API_BASE = localPreview || window.location.protocol === "file:"
+    ? "http://localhost:8001/api" : window.location.origin + "/api";
   let _isConnected = false;
 
   async function checkHealth() {
@@ -47,7 +50,7 @@ const DIS_API = (() => {
       badge.style.color = "#10b981";
       badge.style.border = "1px solid rgba(16, 185, 129, 0.4)";
       badge.innerHTML = `<span style="width:8px;height:8px;border-radius:50%;background:#10b981"></span> FastAPI Connected`;
-      badge.title = `Connected to FastAPI Backend (Author: ${data?.author || "Muhammad Arham"})\nEndpoints ready on port 8001`;
+      badge.title = `Connected to FastAPI Backend (Author: ${data?.author || "Muhammad Arham"})\n${API_BASE}`;
     } else {
       badge.style.backgroundColor = "rgba(100, 116, 139, 0.15)";
       badge.style.color = "#94a3b8";
