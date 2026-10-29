@@ -21,6 +21,14 @@ def test_deployed_frontend(path):
     assert response.content
 
 
+def test_public_sample_download():
+    response = client.get("/data/sample_sales.csv")
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("text/csv")
+    assert b"date,product" in response.content
+    assert client.get("/data/private.csv").status_code == 404
+
+
 @pytest.mark.parametrize("path", ["/.env", "/.git/config", "/requirements.txt", "/backend/app/core/config.py"])
 def test_sources_and_secrets_are_not_served(path):
     assert client.get(path).status_code == 404

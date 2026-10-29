@@ -20,6 +20,11 @@ def home():
     return FileResponse(ROOT / "index.html")
 
 
+@app.get("/data/sample_sales.csv", include_in_schema=False)
+def sample_sales():
+    return FileResponse(ROOT / "data" / "sample_sales.csv", media_type="text/csv")
+
+
 def page_endpoint(filename):
     def serve():
         return FileResponse(ROOT / filename)
