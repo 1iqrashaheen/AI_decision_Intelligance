@@ -169,4 +169,38 @@ python -m assistant.test_assistant
 
 The branches are currently local. The shared `main` branch has not been changed. See [the source notes](team_sources/README.md) for the team branches used.
 
-Database/login connections and deployment still need to be brought together with the rest of the team's work.
+Database/login connections still need to be brought together with the rest of the team's work.
+
+## Vercel deployment
+
+The integration source branch is `integration-branch`; production tracks `main`.
+Deploy a preview and verify the application before merging into `main`.
+
+`vercel.json` selects FastAPI and `pyproject.toml` points to `main:app`, which
+serves the existing HTML pages, CSS, JavaScript and `/api` routes together.
+Use the repository root as Vercel's Root Directory. Do not use a static-only
+output directory. Vercel installs the dependencies declared in `pyproject.toml`;
+keep these consistent with the local `requirements.txt` files. Python 3.12 is
+the declared deployment runtime.
+
+The canonical health endpoint is **`/api/health`**. `/api/health/` redirects to
+it. Expect HTTP 200 and JSON containing `"status": "ok"`, not an HTML page.
+The frontend uses the deployed origin for API requests. Local static previews
+still use the backend on `http://localhost:8001`.
+
+Set secrets in Vercel's Environment Variables for both Preview and Production;
+do not commit `.env` files. `GROQ_API_KEY` enables model selection;
+`GROQ_MODEL` and `ASSISTANT_MODE` follow the settings above. Without a key,
+the supported local grounded answers remain available and are labeled as such.
+
+**Deployment blocker:** uploaded datasets currently live in Python process
+memory (`backend/app/core/store.py`). Separate Vercel workers and cold starts
+cannot share them. A successful health check or a single upload is insufficient
+to establish a reliable deployment. Connect a shared dataset store, or use an
+appropriate persistent backend host, before treating the application as ready.
+Also respect Vercel's request-body limit when configuring `MAX_UPLOAD_MB`;
+raising the application limit does not raise the hosting platform's limit.
+
+Verify upload → analysis → forecast → simulation → chat → PDF/CSV export on
+the preview, including access from different workers, before the production
+merge. Repeat these checks against the production domain after deployment.
