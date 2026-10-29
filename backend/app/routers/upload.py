@@ -3,7 +3,8 @@ import json
 from pathlib import Path
 
 import pandas as pd
-from fastapi import APIRouter, File, UploadFile
+from fastapi import APIRouter, File, UploadFile, Depends
+from backend.app.core.auth import get_optional_user
 
 from backend.app.core.config import ALLOWED_EXT, MAX_UPLOAD_MB
 from backend.app.core.errors import APIError
@@ -15,7 +16,7 @@ router = APIRouter(tags=["upload"])
 
 
 @router.post("/upload", response_model=UploadResponse)
-async def upload(file: UploadFile = File(...)):
+async def upload(file: UploadFile = File(...), user=Depends(get_optional_user)):
     name = file.filename or "upload"
     ext = Path(name).suffix.lower()
     if ext not in ALLOWED_EXT:
@@ -42,7 +43,7 @@ async def upload(file: UploadFile = File(...)):
     if clean_df.empty:
         raise APIError(422, "empty_file", "The file contains no usable data rows after cleaning.")
 
-    dataset_id = save_dataset(clean_df, meta={"filename": name, "quality": quality.model_dump(), **meta})
+    dataset_id = save_dataset(clean_df, meta={"filename": name, "quality": quality.model_dump(), **meta}, owner_id=(user["id"] if user else None))
 
     preview = json.loads(clean_df.head(10).to_json(orient="records", date_format="iso"))
     return UploadResponse(dataset_id=dataset_id, filename=name, quality=quality, preview=preview)

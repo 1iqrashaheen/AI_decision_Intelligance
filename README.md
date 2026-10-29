@@ -46,7 +46,7 @@ This starts both the website and backend. Keep the terminal open, then visit:
 
 Load the sample data or upload a CSV/Excel file. Review the dashboard, save a What-If scenario, compare results, or ask the assistant a question. Reports can be downloaded from **Compare Scenarios**. Stop the server with **Ctrl+C**.
 
-**No login or Arham's credentials are needed to run the current local backend.**
+Authentication endpoints are available at `/api/auth/register`, `/api/auth/login`, and `/api/auth/me`. Uploads made while logged in are associated with that account. Legacy anonymous uploads remain supported for the existing demo frontend; use a bearer token for account-owned uploads and saved scenarios.
 
 ## Optional AI configuration
 
@@ -79,3 +79,25 @@ Invoke-RestMethod http://127.0.0.1:8001/api/health
 
 The response should contain `"status": "ok"`.
 
+
+
+## Saud's database and authentication module
+
+The backend now creates the `users`, `datasets`, and `saved_scenarios` tables automatically on startup. Uploaded data rows and metadata are persisted in the database (not only in RAM), so dataset IDs continue to work after a backend restart. Local development defaults to a SQLite database at `backend/data/decisionai.db`; for PostgreSQL, create a database named `decisionai`, set `DATABASE_URL` in the root `.env`, and install the requirements.
+
+Example root `.env` settings (never commit real secrets):
+
+```dotenv
+DATABASE_URL=postgresql+psycopg://YOUR_USER:YOUR_PASSWORD@localhost:5432/decisionai
+JWT_SECRET=replace-with-a-long-random-secret-at-least-32-characters
+```
+
+### Authentication API
+
+- `POST /api/auth/register` JSON: `{"email":"you@example.com","password":"a-strong-password"}`
+- `POST /api/auth/login` uses the same JSON shape and returns an access token.
+- Send `Authorization: Bearer YOUR_ACCESS_TOKEN` on requests to associate uploads with your account.
+- `GET /api/auth/me` checks the token.
+- `POST /api/saved/scenarios` saves a scenario for the signed-in user; `GET /api/saved/scenarios` lists only that user's scenarios; `GET /api/saved/scenarios/{id}` opens a saved scenario only if it belongs to that user.
+
+Passwords are stored as salted PBKDF2 hashes, not plaintext. Configure a strong `JWT_SECRET` before deployment. Do not commit `.env`, credentials, database dumps, or API keys.

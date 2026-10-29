@@ -7,3 +7,8 @@ output/
 tmp/
 .pytest_cache/
 .vercel/
+
+# Local database files
+*.db
+*.sqlite
+*.sqlite3

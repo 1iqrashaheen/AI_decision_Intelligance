@@ -1,11 +1,12 @@
 import re
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from backend.app.core.auth import get_optional_user
 
 from assistant.ai_assistant import answer_question
 from assistant.data_connection import prepare_business_data
 from backend.app.core.errors import APIError
-from backend.app.core.store import DATASETS
+from backend.app.core.store import DATASETS, get_dataset, owns_dataset
 from backend.app.schemas.common import ChatRequest, ChatResponse, Changes, Assumptions
 from backend.app.services.analytics import compute_analysis, compute_forecast, extract_baseline
 from backend.app.services.simulator import simulate
@@ -32,10 +33,10 @@ def _scenario_from_question(question, df):
 
 
 @router.post("/chat", response_model=ChatResponse)
-def chat(req: ChatRequest):
-    if req.dataset_id not in DATASETS:
+def chat(req: ChatRequest, user=Depends(get_optional_user)):
+    df = get_dataset(req.dataset_id)
+    if df is None or (not owns_dataset(req.dataset_id, user["id"] if user else None)):
         raise APIError(404, "dataset_not_found", "Selected dataset is unavailable. Upload it again after a server restart.")
-    df = DATASETS[req.dataset_id]
     analysis = compute_analysis(df, req.dataset_id).model_dump()
     scenario = req.scenario
     if scenario is not None:

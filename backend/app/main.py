@@ -3,7 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from backend.app.core.config import CORS_ORIGINS
 from backend.app.core.errors import register_error_handlers
-from backend.app.routers import analysis, chat, export, simulate, upload
+from backend.app.routers import analysis, chat, export, simulate, upload, auth, saved
+from backend.app.core.database import init_db
 
 app = FastAPI(
     title="AI Decision Intelligence & Simulator API",
@@ -20,8 +21,9 @@ app.add_middleware(
 )
 
 register_error_handlers(app)
+init_db()
 
-for r in (upload.router, analysis.router, simulate.router, chat.router, export.router):
+for r in (auth.router, saved.router, upload.router, analysis.router, simulate.router, chat.router, export.router):
     app.include_router(r, prefix="/api")
 
 
