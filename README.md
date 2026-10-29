@@ -79,6 +79,3 @@ Invoke-RestMethod http://127.0.0.1:8001/api/health
 
 The response should contain `"status": "ok"`.
 
-## Current limitations
-
-Database/login integration is not finished. Uploaded data is currently stored in memory and is lost after a restart or unavailable to another server worker. A healthy API response does not confirm database connectivity. Complete and test permanent storage before merging `integration-branch` into `main` for production.
