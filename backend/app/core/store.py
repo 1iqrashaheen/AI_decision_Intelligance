@@ -1,5 +1,6 @@
 """Persistent dataframe storage with a compatibility cache for existing analysis modules."""
 import json, uuid
+from io import StringIO
 from typing import Any, Dict, Optional
 import pandas as pd
 from backend.app.core.database import SessionLocal, Dataset, init_db
@@ -7,7 +8,7 @@ DATASETS: Dict[str,pd.DataFrame]={}; DATASET_METADATA: Dict[str,Dict[str,Any]]={
 
 def _load_row(row):
     try:
-        df=pd.read_json(row.dataframe_json,orient='split')
+        df=pd.read_json(StringIO(row.dataframe_json),orient='split')
         meta=json.loads(row.metadata_json or '{}')
         DATASETS[row.id]=df; DATASET_METADATA[row.id]=meta; DATASET_OWNERS[row.id]=row.owner_id
         return df

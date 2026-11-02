@@ -12,5 +12,6 @@ tmp/
 *.db
 *.sqlite
 *.sqlite3
+backend/data/.auth-secret
 venv/
 whatif/local_data/

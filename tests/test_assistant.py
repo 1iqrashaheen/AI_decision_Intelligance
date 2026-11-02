@@ -34,6 +34,19 @@ def model(payload=None, error=None):
     return SimpleNamespace(chat=SimpleNamespace(completions=Completion()))
 
 
+def test_rejected_model_key_has_actionable_message_without_secret():
+    class RejectedKey(Exception):
+        status_code = 401
+    provider = model(error=RejectedKey('private-provider-details'))
+    result = answer_question('What is revenue?', context(), client=provider, mode='auto')
+    assert result['source'] == 'grounded_assistant'
+    assert '250.00' in result['answer']
+    assert 'GROQ_API_KEY' in result['warnings'][0]
+    assert 'private-provider-details' not in json.dumps(result)
+    with pytest.raises(RuntimeError, match='Update GROQ_API_KEY privately'):
+        answer_question('What is revenue?', context(), client=provider, mode='required')
+
+
 def upload(text, name="sales.csv"):
     res = client.post("/api/upload", files={"file": (name,text,"text/csv")})
     assert res.status_code == 200, res.text

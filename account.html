@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Account · DecisionAI</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="topbar"></div>
+<main class="container">
+  <h1>Your account</h1>
+  <p>Create your own account to save datasets and scenarios in the database. You do not need another team member's login.</p>
+  <p id="status" class="notice" role="status">Checking your session…</p>
+  <section id="signedOut" class="card" hidden>
+    <form id="credentials">
+      <label for="email">Email</label>
+      <input id="email" type="email" autocomplete="username" maxlength="320" required>
+      <label for="password">Password (at least 8 characters)</label>
+      <input id="password" type="password" autocomplete="current-password" minlength="8" maxlength="128" required>
+      <div class="actions">
+        <button class="btn primary" type="submit" name="action" value="login">Sign in</button>
+        <button class="btn" type="submit" name="action" value="register">Create account</button>
+      </div>
+    </form>
+  </section>
+  <section id="signedIn" class="card" hidden>
+    <h2 id="identity"></h2>
+    <p>Signed-in uploads and saved What-If scenarios are stored in your database account. Guest demo data stays separate in this browser.</p>
+    <label for="datasets">Saved datasets</label>
+    <select id="datasets" aria-label="Saved datasets"></select>
+    <div class="actions">
+      <button id="restore" class="btn primary">Open saved data and scenarios</button>
+      <button id="logout" class="btn">Sign out</button>
+    </div>
+    <p>Sales data opens on the dashboard. Expenses and inventory open in the AI Assistant.</p>
+  </section>
+  <p>Sample files: <a href="samples/sales.csv" download>sales</a>, <a href="samples/expenses.csv" download>expenses</a>, <a href="samples/inventory.csv" download>inventory</a>. Analyze all three in the <a href="assistant.html">AI Assistant</a>.</p>
+</main>
+<script src="js/app.js?v=20261102"></script>
+<script src="js/account.js"></script>
+</body>
+</html>

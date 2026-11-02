@@ -63,7 +63,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="js/sample.js"></script>
-<script src="js/app.js"></script>
+<script src="js/app.js?v=20261102"></script>
 <script>
 DIS.renderNav("upload.html");
 const $ = (id) => document.getElementById(id);
@@ -144,12 +144,18 @@ function renderPreview(mapping) {
   else say("", "");
 }
 
-$("use").onclick = () => {
-  const ok = DIS.setDataset({ name: pending.name, loadedAt: new Date().toISOString(), rows: cleaned.rows, report: cleaned.report });
+$("use").onclick = async () => {
+  $("use").disabled = true;
+  try {
+  const ds = { name: pending.name, loadedAt: new Date().toISOString(), rows: cleaned.rows, report: cleaned.report };
+  await DIS.persistDataset(ds);
+  const ok = DIS.setDataset(ds);
   if (!ok) return say("bad", "The browser could not store this file (too large for local storage). Try a smaller file.");
   $("preview").hidden = true; pending = cleaned = null;
   say("good", "Data saved. Open the dashboard or What-If page to use it.");
   showCurrent();
+  } catch (error) { say('bad', error.message); }
+  finally { $("use").disabled = false; }
 };
 $("cancel").onclick = () => { $("preview").hidden = true; pending = cleaned = null; say("", ""); };
 $("sample").onclick = () => { DIS.loadSample(); $("preview").hidden = true; say("good", "Sample data loaded."); showCurrent(); };

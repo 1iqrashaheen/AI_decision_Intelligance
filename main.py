@@ -13,11 +13,12 @@ from backend.app.main import app
 # Only serve website files; keep .env and the rest of the project private.
 app.mount("/css", StaticFiles(directory=ROOT / "css"), name="css")
 app.mount("/js", StaticFiles(directory=ROOT / "js"), name="js")
+app.mount("/samples", StaticFiles(directory=ROOT / "samples"), name="samples")
 
 
 @app.get("/", include_in_schema=False)
 def home():
-    return FileResponse(ROOT / "index.html")
+    return FileResponse(ROOT / "index.html", headers={"Cache-Control": "no-cache"})
 
 
 @app.get("/data/sample_sales.csv", include_in_schema=False)
@@ -27,9 +28,9 @@ def sample_sales():
 
 def page_endpoint(filename):
     def serve():
-        return FileResponse(ROOT / filename)
+        return FileResponse(ROOT / filename, headers={"Cache-Control": "no-cache"})
     return serve
 
 
-for filename in ["index.html", "upload.html", "whatif.html", "compare.html", "assistant.html"]:
+for filename in ["index.html", "upload.html", "whatif.html", "compare.html", "assistant.html", "account.html"]:
     app.add_api_route("/" + filename, page_endpoint(filename), methods=["GET"], include_in_schema=False)

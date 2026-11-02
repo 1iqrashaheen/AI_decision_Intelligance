@@ -17,7 +17,7 @@ from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, Tabl
 
 from assistant.ai_assistant import build_evidence
 from assistant.data_connection import prepare_business_data
-from backend.app.core.store import DATASETS, DATASET_METADATA
+from backend.app.core.store import get_dataset, get_metadata
 from backend.app.schemas.common import ReportPayload, ReportScenario
 from backend.app.services.analytics import compute_analysis, compute_forecast, extract_baseline
 from backend.app.services.simulator import simulate
@@ -43,9 +43,9 @@ def prepare_report(payload):
         return payload.model_copy(update={"source": "supplied", "generated_at": generated,
             "analysis": None, "baseline": None, "dataset_name": None, "forecast": None,
             "warnings": ["These figures were supplied with the request and were not checked against an uploaded dataset."]})
-    if payload.dataset_id not in DATASETS:
+    df = get_dataset(payload.dataset_id)
+    if df is None:
         raise KeyError(payload.dataset_id)
-    df = DATASETS[payload.dataset_id]
     analysis = compute_analysis(df, payload.dataset_id)
     a = analysis.model_dump()
     baseline = None
@@ -70,7 +70,7 @@ def prepare_report(payload):
         except ValueError as exc:
             warnings.append(str(exc))
     return ReportPayload(title=payload.title.strip(), dataset_id=payload.dataset_id,
-        dataset_name=DATASET_METADATA.get(payload.dataset_id, {}).get("filename", "Uploaded dataset"),
+        dataset_name=get_metadata(payload.dataset_id).get("filename", "Uploaded dataset"),
         currency=analysis.currency, generated_at=generated, source="uploaded_data", analysis=analysis,
         kpis=analysis.kpis, baseline=baseline, scenarios=scenarios, recommendations=[recommendation],
         assumptions=["Actual figures come from the selected uploaded file.",
