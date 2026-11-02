@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Business Assistant · DecisionAI</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/assistant.css">
+</head>
+<body>
+<div id="topbar"></div>
+<main class="container">
+  <div class="page-head"><h1>AI Business Assistant</h1><p>Ask about your business data, with figures traced to actual results.</p></div>
+  <div id="status" class="notice" role="status" aria-live="polite">Checking the backend…</div>
+  <div class="assistant-layout">
+    <aside class="stack">
+      <section class="card">
+        <h2>Choose your data</h2>
+        <p class="card-sub">Upload one sales, expense or inventory dataset. Each file is analyzed separately. Excel uses the first worksheet.</p>
+        <label for="businessFile">CSV or Excel file</label>
+        <input id="businessFile" type="file" accept=".csv,.xlsx,.xls">
+        <div class="btn-row data-actions"><button class="btn secondary small" id="sampleData">Try sample sales</button><button class="btn secondary small" id="dashboardData">Use dashboard data</button></div>
+        <p id="datasetInfo" class="muted">No dataset selected.</p>
+        <label for="scenarioSelect">Question context</label>
+        <select id="scenarioSelect" disabled><option value="">Actual results</option></select>
+        <p class="hint">Saved scenarios appear when they belong to the selected dashboard dataset. You can also ask “What if prices increase by 10%?”</p>
+      </section>
+      <section id="findingsCard" class="card" hidden><h2>Business findings</h2><ul id="findings"></ul><details><summary>Data coverage and assumptions</summary><ul id="limitations"></ul></details></section>
+    </aside>
+    <section class="card chat-panel" aria-label="Business conversation">
+      <div class="chat-heading"><h2>Your business questions</h2><button id="clearChat" class="btn secondary small">Clear chat</button></div>
+      <div id="messages" class="messages" role="log" aria-live="polite"><div class="message assistant">Select a dataset to start. I can explain totals, product performance, trends, unusual values and calculated scenarios. Missing information is shown as unavailable.</div></div>
+      <div class="suggestions" id="suggestions"><button type="button">What is our total revenue?</button><button type="button">Which product has the lowest profit margin?</button><button type="button">What if prices increase by 10%?</button><button type="button">What unusual values should I review?</button></div>
+      <form id="chatForm"><label for="question">Ask a business question</label><div class="question-row"><textarea id="question" rows="2" maxlength="1000" placeholder="For example: What is our current profit?" required disabled></textarea><button class="btn" id="sendQuestion" type="submit" disabled>Send</button></div><p class="hint">Answers use the selected file. Actual figures, forecasts and what-if estimates are labeled separately.</p></form>
+    </section>
+  </div>
+  <section id="analysisCard" class="card analysis-card" hidden><h2>Analysis of the selected file</h2><div id="analysisKpis" class="grid cols-4"></div><div class="table-wrap"><table><thead id="analysisHead"></thead><tbody id="analysisRows"></tbody></table></div><p id="analysisNote" class="muted"></p></section>
+</main>
+<script src="js/sample.js"></script>
+<script src="js/app.js"></script>
+<script src="js/api.js"></script>
+<script src="js/assistant.js"></script>
+</body>
+</html>

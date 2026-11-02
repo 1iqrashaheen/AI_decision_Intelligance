@@ -1,39 +1,103 @@
-# DecisionAI — Main website pages
+# AI Decision Intelligence & What-If Simulator
 
-Four connected pages for the AI Decision Intelligence & What-If Simulator.
+DecisionAI helps users upload business data, view results, compare what-if scenarios, ask business questions, and download PDF or CSV reports.
 
-## Run it
-Open `index.html` in a browser (needs internet once for Chart.js and the Excel reader, loaded from cdnjs).
-Or serve the folder: `python3 -m http.server 8000` and visit http://localhost:8000.
+The frontend uses HTML, CSS, and JavaScript. The backend uses Python, FastAPI, pandas, and NumPy. Groq is optional for AI-assisted answers.
 
-## Pages
-| Page | File | What it does |
-|---|---|---|
-| Dashboard | `index.html` | KPI cards, revenue/profit trend chart, revenue by product chart, product table, latest scenario, data quality |
-| Upload Data | `upload.html` | CSV/Excel upload, column matching, quality checks, 10-row preview, "use this data" |
-| What-If | `whatif.html` | Sliders for price, cost, marketing, expenses; elasticity assumptions; live result cards, chart, table, risks; save scenarios |
-| Compare Scenarios | `compare.html` | Select saved scenarios, profit chart, side-by-side table, inputs and risks |
+## Team and modules
 
-## Shared style and logic
-- `css/style.css` — one stylesheet (colors, cards, forms, tables, buttons).
-- `js/app.js` — shared script: storage, CSV/Excel parsing, cleaning, aggregation, scenario engine, formatting, navigation.
-- `js/sample.js` + `data/sample_sales.csv` — built-in sample dataset (48 rows, 4 products, 12 months).
+| Team member | Modules and responsibilities |
+|---|---|
+| **Iqra Shaheen** | **01 — AI Business Assistant; 05 — Business Data Analysis; 09 — Scenario Comparison & Reports.** Business questions, sales/expense/inventory analysis, scenario comparisons, and PDF/CSV reports. |
+| **Muhammad Waleed Ansari** | **02 — Website Frontend.** Dashboard, upload pages, What-If interface, charts, and styling. |
+| **Abdul Samad** | **03 — Dataset Sourcing & Cleaning.** Source datasets, preprocessing, and cleaned business data. |
+| **Ahsan Rafique** | **04 — Sales Forecasting & Recommendations.** Forecasting pipeline, saved forecasts, and model evaluation. |
+| **Arayash Noor** | **06 — What-If Calculations.** Standalone price, expense, marketing, and inventory calculations. |
+| **Muhammad Arham** | **07 — Backend Connections.** API routes and connections between uploads, analysis, simulation, chat, and reports. |
+| **Saud Masood** | **08 — Database & Authentication.** PostgreSQL storage, user accounts, and saved records; integration is pending. |
 
-## How pages are connected
-Pages share data through the browser's localStorage: the dataset chosen on Upload feeds the Dashboard and What-If; scenarios saved on What-If feed Compare and the Dashboard's latest-scenario card.
+## Setup
 
-## Scenario formulas
-- new units = units × (1 + elasticity × price change) × (1 + marketing lift × marketing change)
-- revenue = new units × price × (1 + price change)
-- COGS = new units × unit cost × (1 + cost change)
-- marketing and expenses = original × (1 + their change)
-- profit = revenue − COGS − marketing − expenses
+Install **Git** and **Python 3.12**. Install **Node.js** only if you want to run the JavaScript tests.
 
-Defaults: elasticity −1.2, marketing lift 0.15. Best/expected/worst cases vary these two assumptions (−0.6/0.25, −1.2/0.15, −1.8/0.05).
-Results are estimates, not guaranteed outcomes.
+```powershell
+git clone --branch integration-branch https://github.com/1iqrashaheen/AI_decision_Intelligance.git
+cd AI_decision_Intelligance
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+```
 
-## Checked
-Calculation tests against hand-computed values pass, as do cleaning tests (duplicates, missing values, invalid numbers, bad dates, quoted commas).
+If you already have the project and `.venv`, open the existing project folder and skip cloning and environment creation. Run all commands from the folder containing `main.py`.
 
-## Next steps (from the full project)
-Replace localStorage with FastAPI + PostgreSQL, add authentication, the LLM assistant, forecasting, and PDF/CSV export. `DIS.simulate` is the function to port to the backend.
+On Linux/macOS, create the environment with `python3.12 -m venv .venv`, activate it with `source .venv/bin/activate`, and use `python` instead of `.\.venv\Scripts\python.exe` below.
+
+## Run the project
+
+```powershell
+.\.venv\Scripts\python.exe -m uvicorn main:app --host 127.0.0.1 --port 8001
+```
+
+This starts both the website and backend. Keep the terminal open, then visit:
+
+- [Website](http://127.0.0.1:8001/)
+- [AI Assistant](http://127.0.0.1:8001/assistant.html)
+- [API documentation](http://127.0.0.1:8001/docs)
+- [API health](http://127.0.0.1:8001/api/health)
+
+Load the sample data or upload a CSV/Excel file. Review the dashboard, save a What-If scenario, compare results, or ask the assistant a question. Reports can be downloaded from **Compare Scenarios**. Stop the server with **Ctrl+C**.
+
+Authentication endpoints are available at `/api/auth/register`, `/api/auth/login`, and `/api/auth/me`. Uploads made while logged in are associated with that account. Legacy anonymous uploads remain supported for the existing demo frontend; use a bearer token for account-owned uploads and saved scenarios.
+
+## Optional AI configuration
+
+The sample workflow works without an API key. To enable Groq, copy the root `.env.example` to `.env` only if `.env` does not already exist, and enter your own server-side key:
+
+```dotenv
+GROQ_API_KEY=your_api_key_here
+GROQ_MODEL=openai/gpt-oss-120b
+ASSISTANT_MODE=auto
+```
+
+Restart the backend after changing settings. Leave the key unset for local answers, or use `ASSISTANT_MODE=off` to disable model calls. Never commit `.env` or real keys. The default upload limit is 10 MiB; `MAX_UPLOAD_MB` changes the application limit, but hosting limits still apply.
+
+## Testing
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -q
+node --test tests/js/api.test.js tests/js/comparison.test.js
+.\.venv\Scripts\python.exe whatif/whatif.py
+.\.venv\Scripts\python.exe -m assistant.test_assistant
+```
+
+The latest checks passed **85 Python tests and 11 JavaScript tests**. Skip the Node.js command if Node.js is not installed.
+
+With the backend running, check health in PowerShell:
+
+```powershell
+Invoke-RestMethod http://127.0.0.1:8001/api/health
+```
+
+The response should contain `"status": "ok"`.
+
+
+
+## Saud's database and authentication module
+
+The backend now creates the `users`, `datasets`, and `saved_scenarios` tables automatically on startup. Uploaded data rows and metadata are persisted in the database (not only in RAM), so dataset IDs continue to work after a backend restart. Local development defaults to a SQLite database at `backend/data/decisionai.db`; for PostgreSQL, create a database named `decisionai`, set `DATABASE_URL` in the root `.env`, and install the requirements.
+
+Example root `.env` settings (never commit real secrets):
+
+```dotenv
+DATABASE_URL=postgresql+psycopg://YOUR_USER:YOUR_PASSWORD@localhost:5432/decisionai
+JWT_SECRET=replace-with-a-long-random-secret-at-least-32-characters
+```
+
+### Authentication API
+
+- `POST /api/auth/register` JSON: `{"email":"you@example.com","password":"a-strong-password"}`
+- `POST /api/auth/login` uses the same JSON shape and returns an access token.
+- Send `Authorization: Bearer YOUR_ACCESS_TOKEN` on requests to associate uploads with your account.
+- `GET /api/auth/me` checks the token.
+- `POST /api/saved/scenarios` saves a scenario for the signed-in user; `GET /api/saved/scenarios` lists only that user's scenarios; `GET /api/saved/scenarios/{id}` opens a saved scenario only if it belongs to that user.
+
+Passwords are stored as salted PBKDF2 hashes, not plaintext. Configure a strong `JWT_SECRET` before deployment. Do not commit `.env`, credentials, database dumps, or API keys.

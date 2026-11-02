@@ -1,0 +1,16 @@
+.venv/
+.env
+__pycache__/
+*.pyc
+data/
+output/
+tmp/
+.pytest_cache/
+.vercel/
+
+# Local database files
+*.db
+*.sqlite
+*.sqlite3
+venv/
+whatif/local_data/

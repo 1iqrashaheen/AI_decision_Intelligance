@@ -1,0 +1,20 @@
+{
+    "baseline": {
+        "model_name": "7-Day Moving Average Baseline",
+        "MAE_GBP": 20857.05,
+        "RMSE_GBP": 26637.56
+    },
+    "random_forest": {
+        "model_name": "Random Forest Regressor",
+        "MAE_GBP": 11029.04,
+        "RMSE_GBP": 17439.71,
+        "R2_Score": 0.549,
+        "improvement_pct_mae": 47.12,
+        "improvement_pct_rmse": 34.53
+    },
+    "test_period": {
+        "start_date": "2011-11-10",
+        "end_date": "2011-12-09",
+        "test_days": 30
+    }
+}

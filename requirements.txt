@@ -1,0 +1,4 @@
+-r backend/requirements.txt
+numpy>=1.26,<3
+python-dotenv>=1.0,<2
+groq>=1.0,<2

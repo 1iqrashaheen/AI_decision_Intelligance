@@ -1,0 +1,14 @@
+.scenario-choice { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
+.grid.split > .stack, .grid.split > aside { min-width:0; }
+#table { width:100%; table-layout:fixed; }
+.scenario-choice label { overflow-wrap:anywhere; margin:0; }
+.report-controls { margin-top:22px; border-top:1px solid var(--border); padding-top:18px; }
+.report-controls label { margin-top:12px; }
+.report-controls .btn-row { margin-top:16px; }
+.comparison-delta { display:block; color:var(--muted); font-size:.75rem; margin-top:4px; }
+#table th { white-space:normal; min-width:120px; max-width:240px; overflow-wrap:anywhere; }
+#table tbody th { text-align:left; text-transform:none; letter-spacing:normal; font-size:.85rem; }
+#risks section + section { border-top:1px solid var(--border); padding-top:14px; margin-top:14px; }
+#risks p, #risks li { font-size:.85rem; overflow-wrap:anywhere; }
+.notice:empty { display:none; }
+@media(max-width:900px) { .topbar-inner { height:auto; min-height:58px; flex-wrap:wrap; padding-top:12px; padding-bottom:12px; gap:12px; } }
