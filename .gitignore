@@ -12,3 +12,5 @@ tmp/
 *.db
 *.sqlite
 *.sqlite3
+venv/
+whatif/local_data/

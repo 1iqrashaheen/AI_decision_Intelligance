@@ -24,12 +24,12 @@ CLEAN_CSV = os.path.join(os.path.dirname(__file__), "local_data", "retail_clean.
 # The dataset has sales only. These numbers are NOT in the data, so they are
 # assumptions (the user can type their own values on the what-if page).
 DEFAULTS = {
-    "unit_cost_ratio": 0.60,       # cost of one unit = 60% of its price
+    "unit_cost_ratio": 0.60,          # cost of one unit = 60% of its price
     "operating_expense_ratio": 0.15,  # operating expenses = 15% of revenue
-    "marketing_ratio": 0.05,       # marketing budget = 5% of revenue
-    "stock_buffer": 1.20,          # stock available = 120% of units sold
-    "holding_cost_ratio": 0.02,    # holding one unsold unit = 2% of unit cost
+    "marketing_ratio": 0.05,          # marketing budget = 5% of revenue
 }
+# Inventory is not in the data either. It stays empty (no stock limit) unless
+# the caller passes inventory_units in overrides.
 
 # Rows that are fees or adjustments, not real products
 NON_PRODUCT_CODES = {"POST", "D", "M", "DOT", "BANK CHARGES", "CRUK", "S", "AMAZONFEE", "B"}
@@ -93,15 +93,14 @@ def make_baseline(df, stock_code=None, overrides=None):
     price = revenue / units
     d = {**DEFAULTS}
 
-    unit_cost = overrides.get("unit_cost", price * d["unit_cost_ratio"])
     baseline = Baseline(
         price=round(price, 4),
         units_sold=units,
-        unit_cost=round(unit_cost, 4),
+        unit_cost=round(overrides.get("unit_cost", price * d["unit_cost_ratio"]), 4),
         operating_expenses=overrides.get("operating_expenses", revenue * d["operating_expense_ratio"]),
         marketing_budget=overrides.get("marketing_budget", revenue * d["marketing_ratio"]),
-        inventory_units=overrides.get("inventory_units", units * d["stock_buffer"]),
-        holding_cost_per_unit=overrides.get("holding_cost_per_unit", unit_cost * d["holding_cost_ratio"]),
+        inventory_units=overrides.get("inventory_units"),
+        holding_cost_per_unit=overrides.get("holding_cost_per_unit", 0.0),
     )
     info = {
         "period": f"{last_12[0]} to {last_12[-1]}",
@@ -119,7 +118,7 @@ def demo(stock_code=None):
     baseline, info = make_baseline(df, stock_code)
     print("Selection:", info["selection"], "| Period:", info["period"])
     print("Baseline:", baseline)
-    result = calculate(baseline, Changes(price_pct=10, marketing_pct=20))
+    result = calculate(baseline, Changes(price=0.10, marketing=0.20))
     print("\nWhat if price +10% and marketing +20%?")
     for key in ("units_sold", "revenue", "total_expenses", "net_profit"):
         print(f"  {key:15s} original {result['original'][key]:>14,.2f}"
