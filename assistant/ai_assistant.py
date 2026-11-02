@@ -189,10 +189,13 @@ def answer_question(question, business_data=None, *, client=None, mode=None):
             if set(selected) != set(expected):
                 raise ValueError("Model selected evidence that conflicts with the question router")
             selection, source = selected, "groq_grounded"
-        except Exception:
+        except Exception as exc:
+            authentication_failed = getattr(exc, 'status_code', None) == 401
             if mode == "required":
+                if authentication_failed:
+                    raise RuntimeError("The AI service rejected its server-side API key. Update GROQ_API_KEY privately and restart the backend.") from None
                 raise RuntimeError("The AI service is unavailable or returned an invalid evidence selection. Try again or use offline mode.") from None
-            warnings.append("AI selection was unavailable or failed validation; the answer uses the local grounded question router.")
+            warnings.append("The AI service rejected its API key; update GROQ_API_KEY privately. This answer uses the local grounded question router." if authentication_failed else "AI selection was unavailable or failed validation; the answer uses the local grounded question router.")
     elif mode == "required":
         raise RuntimeError("GROQ_API_KEY is not configured on the server.")
     elif mode != "off":

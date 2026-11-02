@@ -53,7 +53,11 @@ function renderList() {
     label.append(input, document.createTextNode(" " + item.name));
     const remove = document.createElement("button"); remove.className = "btn danger small"; remove.textContent = "Delete";
     remove.setAttribute("aria-label", "Delete " + item.name);
-    remove.onclick = () => { DIS.deleteScenario(item.id); selected.delete(item.id); load(); };
+    remove.onclick = async () => {
+      remove.disabled = true;
+      try { await DIS.deleteScenario(item.id); selected.delete(item.id); load(); }
+      catch (error) { notice(error.message, true); remove.disabled = false; }
+    };
     row.append(label, remove); return row;
   }));
 }
@@ -99,6 +103,7 @@ function render() {
 }
 
 async function ensureBackendDataset() {
+  if (dataset.backendId) { await DIS_API.getAnalysis(dataset.backendId); return dataset.backendId; }
   const key = DIS.datasetKey(dataset);
   if (backendDataset?.key === key) {
     try { await DIS_API.getAnalysis(backendDataset.id); return backendDataset.id; } catch (_) { backendDataset = null; }

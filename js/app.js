@@ -3,6 +3,21 @@
 const DIS = (() => {
   const KEY_DATA = "dis.dataset";
   const KEY_SC = "dis.scenarios";
+  const account = () => {
+    try { return JSON.parse(localStorage.getItem('dis.account') || 'null'); } catch (_) { return null; }
+  };
+  const scopedKey = key => account() ? key + '.user.' + account().id : key;
+  function setAccount(user) {
+    if (account()?.id !== user?.id && typeof sessionStorage !== 'undefined') sessionStorage.removeItem('dis.assistant.dataset');
+    if (user) localStorage.setItem('dis.account', JSON.stringify(user));
+    else localStorage.removeItem('dis.account');
+  }
+  async function accountRequest(path, options = {}) {
+    const response = await fetch('/api/' + path, {credentials:'same-origin', ...options});
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error?.message || 'Account request failed. Please sign in again.');
+    return data;
+  }
 
   const REQUIRED = ["date", "product", "units", "price", "unit_cost", "marketing_spend", "expenses"];
   const LABELS = {
@@ -22,16 +37,16 @@ const DIS = (() => {
   /* ---------- Storage ---------- */
   const store = {
     get(key, fallback) {
-      try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
+      try { const v = localStorage.getItem(scopedKey(key)); return v ? JSON.parse(v) : fallback; }
       catch (e) { return fallback; }
     },
     set(key, value) {
-      try { localStorage.setItem(key, JSON.stringify(value)); return true; }
+      try { localStorage.setItem(scopedKey(key), JSON.stringify(value)); return true; }
       catch (e) { return false; }
     },
   };
   const getDataset = () => store.get(KEY_DATA, null);
-  const datasetKey = (ds) => ds ? ds.name + ":" + ds.loadedAt : "";
+  const datasetKey = (ds) => ds ? (ds.backendId || ds.name + ":" + ds.loadedAt) : "";
   function toBackendCSV(ds) {
     const columns = ["date", "product", "units", "price", "unit_cost", "marketing_spend", "expenses"];
     const quote = value => '"' + String(value ?? "").replaceAll('"', '""') + '"';
@@ -41,7 +56,7 @@ const DIS = (() => {
       quote(imputed && ["marketing_spend", "expenses"].includes(key) ? "" : row[key])).join(","))].join("\n");
   }
   const setDataset = (ds) => store.set(KEY_DATA, ds);
-  const clearDataset = () => { try { localStorage.removeItem(KEY_DATA); } catch (e) {} };
+  const clearDataset = () => { try { localStorage.removeItem(scopedKey(KEY_DATA)); } catch (e) {} };
   const getScenarios = () => store.get(KEY_SC, []);
   const setScenarios = (list) => store.set(KEY_SC, list);
   function addScenario(sc) {
@@ -52,7 +67,36 @@ const DIS = (() => {
     setScenarios(list);
     return sc;
   }
-  function deleteScenario(id) { setScenarios(getScenarios().filter((s) => s.id !== id)); }
+  async function deleteScenario(id) {
+    const scenario = getScenarios().find(s => s.id === id);
+    if (account() && scenario?.serverId) await accountRequest('saved/scenarios/' + scenario.serverId, {method:'DELETE'});
+    setScenarios(getScenarios().filter((s) => s.id !== id));
+  }
+  async function persistDataset(ds = getDataset()) {
+    if (!account() || !ds) return ds;
+    if (ds.backendId) {
+      await accountRequest('analysis/' + encodeURIComponent(ds.backendId));
+      return ds;
+    }
+    const form = new FormData();
+    form.append('file', new Blob([toBackendCSV(ds)], {type:'text/csv'}), ds.name.replace(/\.[^.]+$/, '') + '.csv');
+    const uploaded = await accountRequest('upload', {method:'POST', body:form});
+    const oldKey = datasetKey(ds);
+    ds.backendId = uploaded.dataset_id;
+    if (!setDataset(ds)) throw new Error('The browser could not store this file. Try a smaller dataset.');
+    setScenarios(getScenarios().map(s => s.datasetKey === oldKey ? {...s, datasetKey:ds.backendId} : s));
+    return ds;
+  }
+  async function saveScenario(sc) {
+    if (account()) {
+      const ds = await persistDataset();
+      sc.datasetKey = datasetKey(ds);
+      const saved = await accountRequest('saved/scenarios', {method:'POST', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({name:sc.name, dataset_id:ds.backendId, scenario:sc})});
+      sc.serverId = saved.id;
+    }
+    return addScenario(sc);
+  }
 
   /* ---------- CSV parsing (handles quotes, commas, CRLF) ---------- */
   function parseCSV(text) {
@@ -300,6 +344,7 @@ const DIS = (() => {
       ["index.html", "Dashboard"], ["upload.html", "Upload Data"],
       ["whatif.html", "What-If"], ["compare.html", "Compare Scenarios"],
       ["assistant.html", "AI Assistant"],
+      ["account.html", account() ? "My Account" : "Sign In"],
     ];
     const el = document.getElementById("topbar");
     if (!el) return;
@@ -314,6 +359,7 @@ const DIS = (() => {
   return {
     REQUIRED, LABELS, DEFAULT_ASSUMPTIONS, CASES,
     getDataset, datasetKey, toBackendCSV, setDataset, clearDataset, getScenarios, addScenario, deleteScenario, setScenarios,
+    account, setAccount, accountRequest, persistDataset, saveScenario,
     parseCSV, parseFile, detectMapping, cleanRows, loadSample,
     totals, byMonth, byProduct, simulate, riskNotes,
     money, num, pct, signedPct, deltaClass, monthLabel, esc, renderNav, chartsAvailable,

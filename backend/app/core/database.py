@@ -6,7 +6,7 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
 
 ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_DB = f"sqlite:///{(ROOT / 'backend' / 'data' / 'decisionai.db').as_posix()}"
-DATABASE_URL = os.getenv("DATABASE_URL", DEFAULT_DB)
+DATABASE_URL = os.getenv("DATABASE_URL", "").strip() or DEFAULT_DB
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+psycopg://", 1)
 if DATABASE_URL.startswith("postgresql://"):

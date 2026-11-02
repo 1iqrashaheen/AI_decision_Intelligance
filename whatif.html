@@ -92,7 +92,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="js/sample.js"></script>
-<script src="js/app.js"></script>
+<script src="js/app.js?v=20261102"></script>
 <script>
 DIS.renderNav("whatif.html");
 const $ = (id) => document.getElementById(id);
@@ -180,24 +180,34 @@ function flash(text) {
   s.innerHTML = DIS.esc(text) + ' <a href="compare.html">Compare scenarios</a>';
 }
 
-function saveOne(name, params, caseName = "custom") {
+async function saveOne(name, params, caseName = "custom") {
   const result = DIS.simulate(rows, params);
-  DIS.addScenario({ name, params, result, baseline: base, datasetKey: DIS.datasetKey(DIS.getDataset()), case: caseName });
+  return DIS.saveScenario({ name, params, result, baseline: base, datasetKey: DIS.datasetKey(DIS.getDataset()), case: caseName });
 }
 
-$("save").onclick = () => {
+$("save").onclick = async () => {
+  $("save").disabled = true;
+  $("saveCases").disabled = true;
+  try {
   const name = $("name").value.trim() || autoName();
-  saveOne(name, current.params);
+  await saveOne(name, current.params);
   $("name").value = "";
   flash('Saved "' + name + '".');
+  } catch (error) { $("saved").hidden = false; $("saved").className = 'notice bad'; $("saved").textContent = error.message; }
+  finally { $("save").disabled = $("saveCases").disabled = false; }
 };
 
-$("saveCases").onclick = () => {
+$("saveCases").onclick = async () => {
+  $("saveCases").disabled = true;
+  $("save").disabled = true;
+  try {
   const name = $("name").value.trim() || autoName();
-  Object.entries(DIS.CASES).forEach(([key, c]) =>
-    saveOne(name + " — " + c.label, { ...current.params, elasticity: c.elasticity, marketingLift: c.marketingLift }, key));
+  for (const [key, c] of Object.entries(DIS.CASES))
+    await saveOne(name + " — " + c.label, { ...current.params, elasticity: c.elasticity, marketingLift: c.marketingLift }, key);
   $("name").value = "";
   flash('Saved 3 versions of "' + name + '" (best, expected, worst).');
+  } catch (error) { $("saved").hidden = false; $("saved").className = 'notice bad'; $("saved").textContent = error.message; }
+  finally { $("save").disabled = $("saveCases").disabled = false; }
 };
 
 $("reset").onclick = () => {
